@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nothing+You+Could+Do&display=swap');
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: white;
+}
+body{
+  background-color: black;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  scroll-behavior: smooth !important;
+}
+body.dark-mode{
+  background-color: rgb(170, 30, 170);
+}
+.ff{
+  font-family: "'Nothing You Could Do', cursive"
+}
