@@ -16,7 +16,7 @@ const Landingpage = () => {
                </header>
      <section id="hero" className="bg-gradient-to-b from-black to-slate-950">
         <div className="mx-auto sm:px-7 px-4 max-w-screen-xl">
-            <div className="gap-x-10 px-4 py-16 pb-64 mx-auto lg:grid xl:px-0 lg:grid-cols-12">
+            <div className="gap-x-10 px-7 py-16 pb-64 mx-auto lg:grid xl:px-0 lg:grid-cols-12">
                 <h1 id="typing" className="font-sans font-semibold text-gray-600 lg:col-span-12">
                     Super tool overpowered by Gemini AI
                 </h1>
@@ -28,7 +28,7 @@ const Landingpage = () => {
                     </h2>
                 </div>
                 <div  className=" flex justify-center md:ml-40 lg:ml-10 flex-col w-52 lg:w-72">
-                    <p className="max-w-3xl mt-4  md: text-gray-400 text-[20px] leading-[26px] lg:mt-8 ">
+                    <p className="max-w-3xl mt-4 text-gray-400 text-[20px] leading-[26px] lg:mt-8 ">
                     <span className="font-semibold">NutriBlend</span> is an AI-powered tool that helps you cook your favourite foods. 
                     It's like having a personal chef in your pocket. 
                     It's easy to use and it's free. Try it today!
@@ -69,7 +69,7 @@ const Landingpage = () => {
             <div className="pb-10 lg:pb-20">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                     <div>
-                        <svg className="w-8 h-8 ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
+                        <svg className="w-8 h-8 ml-32 lg:ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
                             <path
                                 d="M29.6931 14.2283L22.7556 6.87823C22.3292 6.426 21.6175 6.40538 21.1652 6.83212C20.7137 7.25851 20.6927 7.9706 21.1195 8.42248L27.3284 15L21.1195 21.5783C20.6927 22.0302 20.7137 22.7419 21.1652 23.1687C21.3827 23.3738 21.6606 23.4754 21.9374 23.4754C22.2363 23.4754 22.5348 23.3569 22.7557 23.1233L29.6932 15.7729C30.1022 15.339 30.1023 14.6618 29.6931 14.2283Z"
                                 fill="#2D3748" />
@@ -90,7 +90,7 @@ const Landingpage = () => {
                     </div>
 
                     <div>
-                        <svg className="w-8 h-8 ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
+                        <svg className="w-8 h-8 ml-32 lg:ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
                             <path
                                 d="M27.3633 7.08984H26.4844V6.21094C26.4844 4.75705 25.3015 3.57422 23.8477 3.57422H4.39453C2.94064 3.57422 1.75781 4.75705 1.75781 6.21094V21.1523H0.878906C0.393516 21.1523 0 21.5459 0 22.0312V23.7891C0 25.2429 1.18283 26.4258 2.63672 26.4258H27.3633C28.8172 26.4258 30 25.2429 30 23.7891V9.72656C30 8.27268 28.8172 7.08984 27.3633 7.08984ZM3.51562 6.21094C3.51562 5.72631 3.9099 5.33203 4.39453 5.33203H23.8477C24.3323 5.33203 24.7266 5.72631 24.7266 6.21094V7.08984H20.332C18.8781 7.08984 17.6953 8.27268 17.6953 9.72656V21.1523H3.51562V6.21094ZM1.75781 23.7891V22.9102h27.6953V23.7891C17.6953 24.0971 17.7489 24.3929 17.8465 24.668H2.63672C2.15209 24.668 1.75781 24.2737 1.75781 23.7891ZM28.2422 23.7891C28.2422 24.2737 27.8479 24.668 27.3633 24.668H20.332C19.8474 24.668 19.4531 24.2737 19.4531 23.7891V9.72656C19.4531 9.24193 19.8474 8.84766 20.332 8.84766H27.3633C27.8479 8.84766 28.2422 9.24193 28.2422 9.72656V23.7891Z"
                                 fill="#2D3748" />
@@ -111,7 +111,7 @@ const Landingpage = () => {
                     </div>
 
                     <div>
-                        <svg className="w-8 h-8 ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
+                        <svg className="w-8 h-8 ml-32 lg:ml-40 md:ml-36" viewBox="0 0 30 30" fill="none">
                             <g clipPath="url(#clip0)">
                                 <path
                                     d="M26.599 4.339a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zM7.151 25.661a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zM23.486 13.163a8.636 8.636 0 00-1.19-2.873l1.123-1.123-2.592-2.59L19.705 7.7a8.636 8.636 0 00-2.873-1.19V4.921h-3.664v1.586a8.634 8.634 0 00-2.873 1.19l-1.122-1.12-2.592 2.589 1.123 1.123a8.636 8.636 0 00-1.19 2.873H4.922l-.002 3.663h2.592A8.626 8.626 0 007.704 19.7l-1.127 1.127 2.59 2.591 1.128-1.127a8.623 8.623 0 002.873 1.19v1.597h3.664v-1.597a8.628 8.628 0 002.873-1.19l1.128 1.128 2.59-2.592-1.127-1.127a8.627 8.627 0 001.19-2.873h2.593v-3.664h-1.593zM15 19.256a4.255 4.255 0 110-8.511 4.255 4.255 0 010 8.51z"
