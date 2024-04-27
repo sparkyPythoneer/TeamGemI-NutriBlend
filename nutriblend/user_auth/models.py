@@ -12,6 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import BaseModel, OTP
 from helpers.reusable import validate_password
+from nutriblend.main.models import Ingredients
 from .managers import UserManager
 from django.contrib.postgres.fields import ArrayField, JSONField
 
@@ -310,9 +311,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return user
         return None
     
-
-
-
 class UserProfile(models.Model):
 
     DIET_CHOICES = (
@@ -335,9 +333,16 @@ class UserProfile(models.Model):
     diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
     allergies = ArrayField(models.TextField(), blank=True, null=True)
     health_preference = ArrayField(models.TextField(), blank=True, null=True)
-    # ingredient_restrictions = models.ForeignKey()
+    ingredient_restrictions = models.ManyToManyField(Ingredients, on_delete=models.CASCADE, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "USER PROFILE"
+        verbose_name_plural = "USER PROFILES"
+
+
+
 
 
 
