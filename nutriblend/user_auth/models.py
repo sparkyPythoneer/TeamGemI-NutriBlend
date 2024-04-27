@@ -328,14 +328,14 @@ class UserProfile(models.Model):
         ('NOP', 'No Preferences'),
     )
 
-    user = models.OneToOneField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=300, blank=True, null=True)
     country = models.CharField(max_length=300, blank=True, null=True)
     city = models.CharField(max_length=300, blank=True, null=True)
     diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
     allergies = ArrayField(models.TextField(), blank=True, null=True)
     health_preference = ArrayField(models.TextField(), blank=True, null=True)
-    ingredient_restrictions = models.ForeignKey()
+    # ingredient_restrictions = models.ForeignKey()
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
