@@ -105,7 +105,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         """
 
         if settings.DEBUG and not otp:
-            otp = settings.DEFAULT_OTP
+            otp == settings.DEFAULT_OTP
 
         verify = OTP.verify_otp(recipient=recipient, otp=otp)
         if verify.get("status") == True:
@@ -218,19 +218,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
                     recipient=email,
                     length=6,
                     expiry_time=10
-                )
-                email_sender(
-                    recipient=[email],
-                    subject="Password Reset",
-                    text=f"""
-Hello {user.first_name.capitalize()},\n
-A password reset was requested on your account, complete the process with the code below:\n
-{otp}\n
-Kindly disregard this email if you didn't request one.\n\n
-Best regards,\n
-The Team at Liberty Tech X.
-
-                    """
                 )
                 return {
                     "status": True,

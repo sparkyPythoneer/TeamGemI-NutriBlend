@@ -26,6 +26,18 @@ class UserSignUpAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+# class UserVerificationAPIView(APIView):
+#     def post(self, request, *args, **kwargs):
+#         serializer = UserVerificationSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         verify = User.verify_user(**serializer.validated_data)
+
+#         if verify.get("status") == True:
+#             return Response(data=verify, status=status.HTTP_200_OK)
+#         return Response(
+#             errors=verify, status_code=400, status=status.HTTP_400_BAD_REQUEST
+#         )
+    
 class UserVerificationAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UserVerificationSerializer(data=request.data)
@@ -34,9 +46,7 @@ class UserVerificationAPIView(APIView):
 
         if verify.get("status") == True:
             return Response(data=verify, status=status.HTTP_200_OK)
-        return Response(
-            errors=verify, status_code=400, status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response(data=verify, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserSignInAPIView(APIView):
@@ -50,13 +60,13 @@ class UserSignInAPIView(APIView):
         user = User.objects.filter(email=email).first()
         if user is None:
             return Response(
-                {"email": ["Invalid email, please provide a valid email."]},
+                {"email": ["Invalid cridentials, please provide valid cridentials."]},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         if not user.check_password(password):
             return Response(
-                {"password": ["Invalid password, please provide a valid password."]},
+                {"password": ["Invalid cridentials, please provide valid cridentials."]},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -92,7 +102,7 @@ class UserDetailsAPIView(APIView):
                     data=serializer.data, status=status.HTTP_200_OK
                 )
             return Response(
-                {"message": "USER PROFILE does not exist."}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "USER does not exist."}, status=status.HTTP_400_BAD_REQUEST
             )
         return Response(
             {"message": "No field(s) was passed to be updated."}, status=status.HTTP_400_BAD_REQUEST
