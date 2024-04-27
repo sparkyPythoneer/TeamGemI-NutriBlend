@@ -130,7 +130,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             }
 
     @classmethod
-    def sign_in(cls, email: str, password: str) -> dict or None:
+    def sign_in(cls, email: str, password: str) -> dict or None: # type: ignore
         """
         Authenticates a user with the provided email and password, generating a token for successful sign-in.
         Args:
