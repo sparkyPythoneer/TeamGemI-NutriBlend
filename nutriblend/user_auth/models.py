@@ -93,7 +93,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         return user
 
     @classmethod
-    def verify_user(cls, recipient: str, otp: str = None) -> dict:
+    def verify_user(cls, recipient: str, otp: str) -> dict:
         """
         Verifies the user profile based on the provided OTP.
         Args:
@@ -104,26 +104,30 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             dict: A dictionary containing the verification status and message.
         """
 
-        if settings.DEBUG and not otp:
-            otp == settings.DEFAULT_OTP
-
-        verify = OTP.verify_otp(recipient=recipient, otp=otp)
-        if verify.get("status") == True:
-            user = cls.objects.filter(email=recipient)
-            if user.exists():
-                user.update(email_verified=True)
+        if settings.DEBUG:
+            if otp == settings.DEFAULT_OTP:
                 return {
                     "status": True,
                     "message": "USER PROFILE was verified successfully."
                 }
+        else:
+            verify = OTP.verify_otp(recipient=recipient, otp=otp)
+            if verify.get("status") == True:
+                user = cls.objects.filter(email=recipient)
+                if user.exists():
+                    user.update(email_verified=True)
+                    return {
+                        "status": True,
+                        "message": "USER PROFILE was verified successfully."
+                    }
+                return {
+                    "status": False,
+                    "message": "email is not registered to any USER PROFILE."
+                }
             return {
                 "status": False,
-                "message": "email is not registered to any USER PROFILE."
+                "message": "invalid or expired OTP."
             }
-        return {
-            "status": False,
-            "message": "invalid or expired OTP."
-        }
 
     @classmethod
     def sign_in(cls, email: str, password: str) -> dict or None:
