@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     # Local.
     "core",
     "user_auth",
+    "main",
 
     # Third party
     "import_export",
