@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.db import models
 from datetime import datetime
 
-from nutriblend.user_auth.models import User
-# Create your models here.
 
+User = settings.AUTH_USER_MODEL
+
+
+# Create your models here.
 class Ingredients(models.Model):
     name = models.CharField(max_length=225, blank=True, null=True)
     description = models.TextField()
@@ -31,14 +34,15 @@ class Recipies(models.Model):
 
 
 class RecipieDetails(models.Model):
-    recipie = models.ManyToOneRel(Recipies, on_delete=models.CASCADE)
-    ingredients = models.ManyToOneRel(Ingredients, on_delete=models.CASCADE)
+    
+    recipie = models.ForeignKey('Recipies', on_delete=models.CASCADE)
+    ingredients = models.ForeignKey('Ingredients', on_delete=models.CASCADE)
     quantity = models.IntegerField(blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbos_name = "RECIPIE DETAIL"
+        verbose_name = "RECIPIE DETAIL"
         verbose_name_plural = "RECIPIE DETAILS"
 
 
