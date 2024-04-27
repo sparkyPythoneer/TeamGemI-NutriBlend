@@ -11,8 +11,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import BaseModel, OTP
-from helpers.reusable import email_sender, validate_password
+from helpers.reusable import  validate_password
 from .managers import UserManager
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 
 # Create your model(s) here.
@@ -308,3 +309,35 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             user.save()
             return user
         return None
+    
+
+
+
+class UserProfile(models.Model):
+
+    DIET_CHOICES = (
+        ('VEG', 'Vegetarian'),
+        ('VEGN', 'Vegan'),
+        ('GF', 'Gluten Free'),
+        ('KF', 'Keto'),
+        ('PF', 'Paleo'),
+        ('LF', 'Lactose Free'),
+        ('DF', 'Dairy Free'),
+        ('HF', 'Halal'),
+        ('KF', 'Kosher'),
+        ('NOP', 'No Preferences'),
+    )
+
+    user = models.OneToOneField()
+    username = models.CharField(max_length=300, blank=True, null=True)
+    country = models.CharField(max_length=300, blank=True, null=True)
+    city = models.CharField(max_length=300, blank=True, null=True)
+    diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
+    allergies = ArrayField(models.TextField(), blank=True, null=True)
+    health_preference = ArrayField(models.TextField(), blank=True, null=True)
+    ingredient_restrictions = models.ForeignKey()
+    date_created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+
+
