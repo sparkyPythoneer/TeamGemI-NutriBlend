@@ -275,6 +275,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             "status": False,
             "message": "invalid or expired OTP."
         }
+    
 
     @classmethod
     def update_user_details(

@@ -130,7 +130,7 @@ class ForgotPasswordAPIView(APIView):
         if forgot_password.get("status") == True:
             return Response(data=forgot_password, status=status.HTTP_200_OK)
         return Response(forgot_password, status=status.HTTP_400_BAD_REQUEST)
-
+    
 
 class ResetPasswordAPIView(APIView):
 
