@@ -311,7 +311,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return user
         return None
     
-class UserProfile(models.Model):
+class UserProfile(BaseModel):
 
     DIET_CHOICES = (
         ('VEG', 'Vegetarian'),
@@ -334,8 +334,6 @@ class UserProfile(models.Model):
     allergies = ArrayField(models.TextField(), blank=True, null=True)
     health_preference = ArrayField(models.TextField(), blank=True, null=True)
     ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "USER PROFILE"
