@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import BaseModel, OTP
-from helpers.reusable import email_sender, validate_password
+from helpers.reusable import validate_password
 from .managers import UserManager
 
 
