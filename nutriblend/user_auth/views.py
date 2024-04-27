@@ -132,18 +132,6 @@ class ForgotPasswordAPIView(APIView):
         return Response(forgot_password, status=status.HTTP_400_BAD_REQUEST)
     
 
-
-class UserSignOutAPIView(APIView):
-    
-    def post(self, request, *args, **kwargs):
-        refresh_token = request.data.get('refresh_token')
-        if not refresh_token:
-            return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        result = User.sign_out(refresh_token)
-        return Response(result, status=status.HTTP_200_OK)
-
-
 class ResetPasswordAPIView(APIView):
 
     def post(self, request, *args, **kwargs):

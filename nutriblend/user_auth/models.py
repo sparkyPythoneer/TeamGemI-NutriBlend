@@ -278,23 +278,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     
 
     @classmethod
-    def sign_out(cls, refresh_token):
-        """
-        Sign out a user by blacklisting the refresh token.
-        Args:
-            cls (class): The class reference for the user model.
-            refresh_token (str): The refresh token to blacklist.
-        Returns:
-            dict: A dictionary containing the result of the sign-out operation.
-        """
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return {"success": "User signed out successfully."}
-        except Exception as e:
-            return {"error": str(e)}
-
-    @classmethod
     def update_user_details(
         cls,
         user,
