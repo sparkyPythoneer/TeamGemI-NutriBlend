@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "core",
     "user_auth",
     "main",
+    "ai",
 
     # Third party
     "import_export",
