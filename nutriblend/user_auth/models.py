@@ -12,7 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import BaseModel, OTP
 from helpers.reusable import validate_password
-# from main.models import Ingredients
+from main.models import Ingredients
 from .managers import UserManager
 from django.contrib.postgres.fields import ArrayField, JSONField
 
@@ -333,7 +333,7 @@ class UserProfile(BaseModel):
     diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
     allergies = ArrayField(models.TextField(), blank=True, null=True)
     health_preference = ArrayField(models.TextField(), blank=True, null=True)
-    # ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
+    ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
 
     class Meta:
         verbose_name = "USER PROFILE"
