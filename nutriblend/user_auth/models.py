@@ -1,6 +1,5 @@
 import pytz
 from datetime import datetime
-
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
@@ -22,9 +21,15 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """
     Custom user model representing a user profile.
     """
+
+    TYPE_OF_USER = (
+        ("N_USER", "N_USER"),
+        ("CHEF", "CHEF"),
+    )
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255)
+    user_type = models.CharField(max_length=255, choices=TYPE_OF_USER, default="N_USER")
     email = models.EmailField(max_length=255, unique=True)
     email_verified = models.BooleanField(default=False)
     password = models.CharField(
@@ -105,6 +110,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         Returns:
             dict: A dictionary containing the verification status and message.
         """
+        
 
         if settings.DEBUG:
             if otp == settings.DEFAULT_OTP:
