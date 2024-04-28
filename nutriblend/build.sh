@@ -6,8 +6,9 @@ pip install -r requirements.txt
 
 # python manage.py collectstatic --no-input
 python manage.py makemigrations main
-python manage.py makemigrations user_auth
-python manage.py migrate
+
+# python manage.py makemigrations user_auth
+python manage.py migrate main
 
 if [[ $CREATE_SUPERUSER ]]; then
   python manage.py createsuperuser --no-input
