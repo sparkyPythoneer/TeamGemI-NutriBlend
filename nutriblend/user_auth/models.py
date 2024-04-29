@@ -311,33 +311,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return user
         return None
     
-class UserProfile(BaseModel):
 
-    DIET_CHOICES = (
-        ('VEG', 'Vegetarian'),
-        ('VEGN', 'Vegan'),
-        ('GF', 'Gluten Free'),
-        ('KF', 'Keto'),
-        ('PF', 'Paleo'),
-        ('LF', 'Lactose Free'),
-        ('DF', 'Dairy Free'),
-        ('HF', 'Halal'),
-        ('KF', 'Kosher'),
-        ('NOP', 'No Preferences'),
-    )
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=300, blank=True, null=True)
-    country = models.CharField(max_length=300, blank=True, null=True)
-    city = models.CharField(max_length=300, blank=True, null=True)
-    diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
-    allergies = ArrayField(models.TextField(), blank=True, null=True)
-    health_preference = ArrayField(models.TextField(), blank=True, null=True)
-    ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
-
-    class Meta:
-        verbose_name = "USER PROFILE"
-        verbose_name_plural = "USER PROFILES"
 
 
 
