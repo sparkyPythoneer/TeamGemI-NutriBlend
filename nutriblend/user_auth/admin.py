@@ -11,6 +11,8 @@ class UserResource(resources.ModelResource):
         model = User
 
 
+
+
 # class OtpResource(resources.ModelResource):
 #     class Meta:
 #         model = Otp
@@ -40,6 +42,7 @@ class UserResourceAdmin(ImportExportModelAdmin):
         item.remove("password")
 
         return item
+    
 
 
 # class OtpResourceAdmin(ImportExportModelAdmin):
@@ -59,4 +62,5 @@ class UserResourceAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(User, UserResourceAdmin)
+
 # admin.site.register(Otp, OtpResourceAdmin)

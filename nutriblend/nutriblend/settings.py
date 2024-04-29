@@ -155,6 +155,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user_auth.User"
 
-DEFAULT_OTP = config("DEFAULT_OTP", cast=str)
+# DEFAULT_OTP = config("DEFAULT_OTP", cast=str)
+
+DEFAULT_OTP = "1111"
 
 OTP_SECRET = config("OTP_SECRET", cast=str)
+
+GOOGLE_API_KEY = config("GOOGLE_API_KEY")
