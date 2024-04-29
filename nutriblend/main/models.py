@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.db import models
 from core.models import BaseModel
+from django.contrib.postgres.fields import ArrayField
 
 
 User = settings.AUTH_USER_MODEL
 
 
-# Create your models here.
+
 class Ingredients(BaseModel):
     name = models.CharField(max_length=225, blank=True, null=True)
     description = models.TextField()
@@ -15,6 +16,99 @@ class Ingredients(BaseModel):
     class Meta:
         verbose_name = "INGREDIENT"
         verbose_name_plural = "INGREDIENTS"
+        
+class UserProfile(BaseModel):
+
+    DIET_CHOICES = (
+        ('VEG', 'Vegetarian'),
+        ('VEGN', 'Vegan'),
+        ('GF', 'Gluten Free'),
+        ('KF', 'Keto'),
+        ('PF', 'Paleo'),
+        ('LF', 'Lactose Free'),
+        ('DF', 'Dairy Free'),
+        ('HF', 'Halal'),
+        ('KF', 'Kosher'),
+        ('NOP', 'No Preferences'),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=300, blank=True, null=True)
+    country = models.CharField(max_length=300, blank=True, null=True)
+    city = models.CharField(max_length=300, blank=True, null=True)
+    diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
+    allergies = ArrayField(models.TextField(), blank=True, null=True)
+    health_preference = ArrayField(models.TextField(), blank=True, null=True)
+    ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
+
+    class Meta:
+        verbose_name = "USER PROFILE"
+        verbose_name_plural = "USER PROFILES"
+
+    @classmethod
+    def create_profile(cls, user, **kwargs):
+        ingredient_restrictions = kwargs.pop('ingredient_restrictions', [])  
+        profile = cls.objects.create(
+            user=user,
+            **kwargs
+        )
+        profile.ingredient_restrictions.set(ingredient_restrictions)  
+        return profile
+
+    @classmethod
+    def update_profile(cls, uuid, **kwargs):
+        profile = cls.objects.get(user__id=uuid)
+        for key, value in kwargs.items():
+            setattr(profile, key, value)
+        profile.save()
+        return profile
+
+    @classmethod
+    def delete_profile(cls, uuid):
+        profile = cls.objects.get(user__id=uuid)
+        profile.delete()
+
+    @classmethod
+    def get_profile(cls, uuid):
+        return cls.objects.get(user__id=uuid)
+    
+
+class ChefProfile(models.Model):
+    AVAILABILITY_CHOICES = (
+        ('WEEKDAYS', 'Weekdays'),
+        ('WEEKENDS', 'Weekends'),
+        ('EVENINGS', 'Evenings'),
+        ('FULL_TIME', 'Full Time'),
+        ('PART_TIME', 'Part Time'),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    business_name = models.CharField(max_length=225, blank=True, null=True)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=13, blank=True, null=True)
+    address = models.TextField()
+    rating = models.IntegerField(default=0)
+    review = models.TextField()
+    order_counts = models.IntegerField(default=0)
+    specialties = models.CharField(max_length=255, blank=True, null=True)
+    experience = models.IntegerField(default=0)
+    availability = models.CharField(max_length=50, choices=AVAILABILITY_CHOICES, blank=True, null=True)
+    certifications = models.CharField(max_length=255, blank=True, null=True)
+
+    price_range = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "CHEF PROFILE"
+        verbose_name_plural = "CHEF PROFILES"
+
+
+    @classmethod
+    def create_chef_profile(cls, user, **kwargs):
+        chef_profile = cls.objects.create(
+            user=user,
+            **kwargs
+        )
+        return chef_profile
 
 
 class Recipes(BaseModel):

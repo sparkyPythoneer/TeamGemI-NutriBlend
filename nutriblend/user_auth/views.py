@@ -3,11 +3,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User, UserProfile
+from .models import User
+
 from .serializers import (
     ChangePasswordSerializer,
     ForgotPasswordSerializer,
-    UserProfileSerializer,
+    Registererializer,
     UserSerializer,
     UserLoginSerializer,
     UserUpdateSerializer,
@@ -19,25 +20,13 @@ from .serializers import (
 class UserSignUpAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
-        serializer = UserSerializer(data=request.data)
+        serializer = Registererializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = User.sign_up(**serializer.validated_data)
         if user:
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
-# class UserVerificationAPIView(APIView):
-#     def post(self, request, *args, **kwargs):
-#         serializer = UserVerificationSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         verify = User.verify_user(**serializer.validated_data)
-
-#         if verify.get("status") == True:
-#             return Response(data=verify, status=status.HTTP_200_OK)
-#         return Response(
-#             errors=verify, status_code=400, status=status.HTTP_400_BAD_REQUEST
-#         )
     
 class UserVerificationAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -162,27 +151,3 @@ class ResetPasswordAPIView(APIView):
         return Response(reset_password, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserProfileAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = UserProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            user = request.user 
-            profile = UserProfile.create_profile(user, **serializer.validated_data)
-            return Response(UserProfileSerializer(profile).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, id):
-        profile = UserProfile.update_profile(id, **request.data)
-        serializer = UserProfileSerializer(profile)
-        return Response(serializer.data)
-
-    def delete(self, request, id):
-        UserProfile.delete_profile(id)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def get(self, request, id):
-        profile = UserProfile.get_profile(id)
-        serializer = UserProfileSerializer(profile)
-        return Response(serializer.data)
