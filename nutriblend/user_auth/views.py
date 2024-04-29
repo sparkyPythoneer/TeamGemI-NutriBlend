@@ -8,7 +8,6 @@ from .models import User
 from .serializers import (
     ChangePasswordSerializer,
     ForgotPasswordSerializer,
-    Registererializer,
     UserSerializer,
     UserLoginSerializer,
     UserUpdateSerializer,
@@ -20,7 +19,7 @@ from .serializers import (
 class UserSignUpAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
-        serializer = Registererializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = User.sign_up(**serializer.validated_data)
         if user:

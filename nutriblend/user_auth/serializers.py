@@ -121,18 +121,18 @@ class UserPasswordResetSerializer(serializers.Serializer):
         validated_data.pop('confirm_password')
         return validated_data
     
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
 
 
 
 
-class Registererializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name', 'password', 'last_name', 'user_type', 'email',]
+# class Registererializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'password', 'last_name', 'user_type', 'email',]
 
 
 
