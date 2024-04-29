@@ -99,6 +99,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         )
         return user
 
+
     @classmethod
     def verify_user(cls, recipient: str, otp: str) -> dict:
         """
@@ -110,32 +111,44 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         Returns:
             dict: A dictionary containing the verification status and message.
         """
-        
 
-        if settings.DEBUG:
-            if otp == settings.DEFAULT_OTP:
+        if settings.DEBUG and otp == settings.DEFAULT_OTP:
+            user = cls.objects.filter(email=recipient).first()
+            if user is not None:
+                user.email_verified = True
+                user.save()
                 return {
                     "status": True,
                     "message": "USER PROFILE was verified successfully."
                 }
-        else:
-            verify = OTP.verify_otp(recipient=recipient, otp=otp)
-            if verify.get("status") == True:
-                user = cls.objects.filter(email=recipient)
-                if user.exists():
-                    user.update(email_verified=True)
-                    return {
-                        "status": True,
-                        "message": "USER PROFILE was verified successfully."
-                    }
+            else:
                 return {
                     "status": False,
                     "message": "email is not registered to any USER PROFILE."
                 }
-            return {
-                "status": False,
-                "message": "invalid or expired OTP."
-            }
+        else:
+            verify = OTP.verify_otp(recipient=recipient, otp=otp)
+            if verify.get("status") == True:
+                user = cls.objects.filter(email=recipient).first()
+                if user is not None:
+                    user.email_verified = True
+                    user.save()
+                    return {
+                        "status": True,
+                        "message": "USER PROFILE was verified successfully."
+                    }
+                else:
+                    return {
+                        "status": False,
+                        "message": "email is not registered to any USER PROFILE."
+                    }
+            else:
+                return {
+                    "status": False,
+                    "message": "invalid or expired OTP."
+                }
+
+
 
     @classmethod
     def sign_in(cls, email: str, password: str) -> dict or None: # type: ignore
@@ -243,26 +256,63 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         if phone_number is not None:
             pass
 
+    # @classmethod
+    # def reset_password(cls, otp: str, new_password: str, email: str = None, phone_number: str = None):
+    #     """
+    #     Set a new password for an existing user.
+    #     Args:
+    #         cls (class): The class reference for the user model.
+    #         otp (str): One time password used for verification.
+    #         new_password (str): The new password to be set for the user.
+    #         email (str): User's email address for password reset. Defaults to None.
+    #         phone_number (str): User's phone number for password reset. Defaults to None.
+    #     Returns:
+    #         dict: A dictionary containing the status and message of the operation.
+    #             - status (bool): True if password reset was successful, False otherwise.
+    #             - message (str): Message describing the outcome of the operation.
+    #     """
+    #     verify = OTP.verify_otp(
+    #         recipient=email if email is not None else phone_number,
+    #         otp=otp
+    #     )
+    #     if verify.get("status") == True:
+    #         if email is not None:
+    #             user = cls.objects.filter(email=email).first()
+    #             if user is not None:
+    #                 user.set_password(new_password)
+    #                 user.save()
+    #                 return {
+    #                     "status": True,
+    #                     "message": "password reset was successful."
+    #                 }
+    #             return {
+    #                 "status": False,
+    #                 "message": "USER PROFILE does not exist."
+    #             }
+
+    #         if phone_number is not None:
+    #             pass
+    #     return {
+    #         "status": False,
+    #         "message": "invalid or expired OTP."
+    #     }
+        
     @classmethod
-    def reset_password(cls, otp: str, new_password: str, email: str = None, phone_number: str = None):
+    def reset_password(cls, new_password: str, email: str = None, otp: str = settings.DEFAULT_OTP):
         """
         Set a new password for an existing user.
         Args:
             cls (class): The class reference for the user model.
-            otp (str): One time password used for verification.
             new_password (str): The new password to be set for the user.
             email (str): User's email address for password reset. Defaults to None.
-            phone_number (str): User's phone number for password reset. Defaults to None.
+            otp (str): One time password used for verification. Defaults to DEFAULT_OTP from settings.
         Returns:
             dict: A dictionary containing the status and message of the operation.
                 - status (bool): True if password reset was successful, False otherwise.
                 - message (str): Message describing the outcome of the operation.
         """
-        verify = OTP.verify_otp(
-            recipient=email if email is not None else phone_number,
-            otp=otp
-        )
-        if verify.get("status") == True:
+        if settings.DEBUG and otp == settings.DEFAULT_OTP:
+            print(f"DEBUG: Using DEFAULT_OTP: {settings.DEFAULT_OTP}")
             if email is not None:
                 user = cls.objects.filter(email=email).first()
                 if user is not None:
@@ -277,12 +327,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
                     "message": "USER PROFILE does not exist."
                 }
 
-            if phone_number is not None:
-                pass
         return {
             "status": False,
             "message": "invalid or expired OTP."
         }
+
     
 
     @classmethod
@@ -344,6 +393,34 @@ class UserProfile(BaseModel):
     class Meta:
         verbose_name = "USER PROFILE"
         verbose_name_plural = "USER PROFILES"
+
+    @classmethod
+    def create_profile(cls, user, **kwargs):
+        ingredient_restrictions = kwargs.pop('ingredient_restrictions', [])  
+        profile = cls.objects.create(
+            user=user,
+            **kwargs
+        )
+        profile.ingredient_restrictions.set(ingredient_restrictions)  
+        return profile
+
+    @classmethod
+    def update_profile(cls, uuid, **kwargs):
+        profile = cls.objects.get(user__id=uuid)
+        for key, value in kwargs.items():
+            setattr(profile, key, value)
+        profile.save()
+        return profile
+
+    @classmethod
+    def delete_profile(cls, uuid):
+        profile = cls.objects.get(user__id=uuid)
+        profile.delete()
+
+    @classmethod
+    def get_profile(cls, uuid):
+        return cls.objects.get(user__id=uuid)
+
 
 
 
