@@ -160,3 +160,5 @@ AUTH_USER_MODEL = "user_auth.User"
 DEFAULT_OTP = "1111"
 
 OTP_SECRET = config("OTP_SECRET", cast=str)
+
+GOOGLE_API_KEY = config("GOOGLE_API_KEY")

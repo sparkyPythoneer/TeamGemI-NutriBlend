@@ -13,7 +13,4 @@ urlpatterns = [
     path("auth/change-password/", views.ChangePasswordAPIView.as_view()),
     path("auth/forgot-password/", views.ForgotPasswordAPIView.as_view()),
     path("auth/reset-password/", views.ResetPasswordAPIView.as_view()),
-    path('user-profiles/', views.UserProfileAPIView.as_view()),
-    path('user-profiles/<uuid:id>/', views.UserProfileAPIView.as_view()),
-
 ]

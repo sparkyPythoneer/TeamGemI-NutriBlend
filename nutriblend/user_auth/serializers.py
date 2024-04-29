@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from helpers.reusable import validate_password
 
-from .models import User, UserProfile
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -121,18 +121,21 @@ class UserPasswordResetSerializer(serializers.Serializer):
         validated_data.pop('confirm_password')
         return validated_data
     
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'middle_name', 'last_name', 'user_type', 'email']
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer() 
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
-        read_only_fields = ['user']  # Exclude 'user' field from being included in the payload
+
+
+# class Registererializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'password', 'last_name', 'user_type', 'email',]
+
+
+
 
 
 

@@ -11,9 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import BaseModel, OTP
 from helpers.reusable import validate_password
-from main.models import Ingredients
 from .managers import UserManager
-from django.contrib.postgres.fields import ArrayField, JSONField
 
 
 # Create your model(s) here.
@@ -23,13 +21,13 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """
 
     TYPE_OF_USER = (
-        ("N_USER", "N_USER"),
+        ("NB_USER", "NB_USER"),
         ("CHEF", "CHEF"),
     )
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255)
-    user_type = models.CharField(max_length=255, choices=TYPE_OF_USER, default="N_USER")
+    user_type = models.CharField(max_length=255, choices=TYPE_OF_USER, default="NB_USER")
     email = models.EmailField(max_length=255, unique=True)
     email_verified = models.BooleanField(default=False)
     password = models.CharField(
@@ -71,6 +69,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         first_name: str,
         last_name: str,
         email: str,
+        user_type: str,
         password: str
     ) -> bool:
         """
@@ -89,6 +88,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             first_name=first_name,
             last_name=last_name,
             email=email,
+            user_type=user_type,
             password=password
         )
         otp = OTP.get_otp(
@@ -366,64 +366,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return user
         return None
     
-class UserProfile(BaseModel):
-
-    DIET_CHOICES = (
-        ('VEG', 'Vegetarian'),
-        ('VEGN', 'Vegan'),
-        ('GF', 'Gluten Free'),
-        ('KF', 'Keto'),
-        ('PF', 'Paleo'),
-        ('LF', 'Lactose Free'),
-        ('DF', 'Dairy Free'),
-        ('HF', 'Halal'),
-        ('KF', 'Kosher'),
-        ('NOP', 'No Preferences'),
-    )
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=300, blank=True, null=True)
-    country = models.CharField(max_length=300, blank=True, null=True)
-    city = models.CharField(max_length=300, blank=True, null=True)
-    diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
-    allergies = ArrayField(models.TextField(), blank=True, null=True)
-    health_preference = ArrayField(models.TextField(), blank=True, null=True)
-    ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
-
-    class Meta:
-        verbose_name = "USER PROFILE"
-        verbose_name_plural = "USER PROFILES"
-
-    @classmethod
-    def create_profile(cls, user, **kwargs):
-        ingredient_restrictions = kwargs.pop('ingredient_restrictions', [])  
-        profile = cls.objects.create(
-            user=user,
-            **kwargs
-        )
-        profile.ingredient_restrictions.set(ingredient_restrictions)  
-        return profile
-
-    @classmethod
-    def update_profile(cls, uuid, **kwargs):
-        profile = cls.objects.get(user__id=uuid)
-        for key, value in kwargs.items():
-            setattr(profile, key, value)
-        profile.save()
-        return profile
-
-    @classmethod
-    def delete_profile(cls, uuid):
-        profile = cls.objects.get(user__id=uuid)
-        profile.delete()
-
-    @classmethod
-    def get_profile(cls, uuid):
-        return cls.objects.get(user__id=uuid)
-
-
-
-
 
 
 
