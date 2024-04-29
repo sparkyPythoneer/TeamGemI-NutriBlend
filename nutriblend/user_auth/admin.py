@@ -2,13 +2,17 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from user_auth.models import User
+from user_auth.models import User, UserProfile
 
 
 # Register your models here.
 class UserResource(resources.ModelResource):
     class Meta:
         model = User
+
+class UserProfileResource(resources.ModelResource):
+    class Meta:
+        model = UserProfile
 
 
 # class OtpResource(resources.ModelResource):
@@ -40,6 +44,24 @@ class UserResourceAdmin(ImportExportModelAdmin):
         item.remove("password")
 
         return item
+    
+
+class UserProfileResourceAdmin(ImportExportModelAdmin):
+    resource_class = UserProfileResource
+
+    search_fields = [
+        "username",
+        "country",
+    ]
+
+    date_hierarchy = "created_at"
+    
+
+    def get_list_display(self, request):
+        item = [field.name for field in self.model._meta.concrete_fields]
+
+
+        return item
 
 
 # class OtpResourceAdmin(ImportExportModelAdmin):
@@ -59,4 +81,5 @@ class UserResourceAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(User, UserResourceAdmin)
+admin.site.register(UserProfile, UserProfileResourceAdmin)
 # admin.site.register(Otp, OtpResourceAdmin)

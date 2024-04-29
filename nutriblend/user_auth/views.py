@@ -3,10 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User
+from .models import User, UserProfile
 from .serializers import (
     ChangePasswordSerializer,
     ForgotPasswordSerializer,
+    UserProfileSerializer,
     UserSerializer,
     UserLoginSerializer,
     UserUpdateSerializer,
@@ -110,7 +111,7 @@ class UserDetailsAPIView(APIView):
 
 
 class ChangePasswordAPIView(APIView):
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data)
@@ -132,12 +133,56 @@ class ForgotPasswordAPIView(APIView):
         return Response(forgot_password, status=status.HTTP_400_BAD_REQUEST)
     
 
+# class ResetPasswordAPIView(APIView):
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = UserPasswordResetSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         reset_password = User.reset_password(**serializer.validated_data)
+#         if reset_password.get("status") == True:
+#             return Response(data=reset_password, status=status.HTTP_200_OK)
+#         return Response(reset_password, status=status.HTTP_400_BAD_REQUEST)
+    
+
 class ResetPasswordAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = UserPasswordResetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        reset_password = User.reset_password(**serializer.validated_data)
+        validated_data = serializer.validated_data
+
+        reset_password = User.reset_password(
+            new_password=validated_data.get("new_password"),
+            email=validated_data.get("email"),
+            # No need to explicitly pass otp, as it defaults to settings.DEFAULT_OTP
+        )
+
         if reset_password.get("status") == True:
             return Response(data=reset_password, status=status.HTTP_200_OK)
         return Response(reset_password, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = UserProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user 
+            profile = UserProfile.create_profile(user, **serializer.validated_data)
+            return Response(UserProfileSerializer(profile).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, id):
+        profile = UserProfile.update_profile(id, **request.data)
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data)
+
+    def delete(self, request, id):
+        UserProfile.delete_profile(id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get(self, request, id):
+        profile = UserProfile.get_profile(id)
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data)
