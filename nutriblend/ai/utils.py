@@ -3,14 +3,44 @@ import textwrap
 
 import google.generativeai as genai
 from django.conf import settings
+import requests
 
-def generate_ai_response(prompt):
-    print("prompt", prompt)
+# def generate_ai_response(prompt):
+#     print("prompt", prompt)
+#     GOOGLE_API_KEY = settings.GOOGLE_API_KEY
+#     genai.configure(api_key=GOOGLE_API_KEY)
+#     model = genai.GenerativeModel('gemini-pro')
+#     ai_response = model.generate_content(prompt)
+#     return ai_response.text
+
+
+
+def generate_ai_response(prompt_text):
+    print("prompt", prompt_text)
+
     GOOGLE_API_KEY = settings.GOOGLE_API_KEY
-    genai.configure(api_key=GOOGLE_API_KEY)
-    model = genai.GenerativeModel('gemini-pro')
-    ai_response = model.generate_content(prompt)
-    return ai_response.text
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GOOGLE_API_KEY}"
+    headers = {'Content-Type': 'application/json'}
+
+    data = {
+        "contents": [{
+            "parts": [{
+                "text": prompt_text
+            }]
+        }]
+    }
+
+    response = requests.post(url, json=data, headers=headers)
+    
+    if response.status_code == 200:
+        response_dict = response.json()
+        ai_response = response_dict['candidates'][0]['content']['parts'][0]['text']
+        # ai_response = response.json().get('contents', [{}])[0].get('parts', [{}])[0].get('text', '')
+        return ai_response
+    else:
+        print(f"Error: {response.status_code}, {response.text}")
+        return None
+
 
 
 def generate_recipe_ai_prompt(user_profile, user_message):
