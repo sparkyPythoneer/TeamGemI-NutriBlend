@@ -38,7 +38,7 @@ class UserProfile(BaseModel):
     city = models.CharField(max_length=300, blank=True, null=True)
     diatary_prefrence =  models.CharField(choices=DIET_CHOICES, max_length=150, blank=True, null=True)
     allergies = ArrayField(models.TextField(), blank=True, null=True)
-    health_preference = ArrayField(models.TextField(), blank=True, null=True)
+    health_condition = ArrayField(models.TextField(), blank=True, null=True)
     ingredient_restrictions = models.ManyToManyField(Ingredients, blank=True)
 
     class Meta:

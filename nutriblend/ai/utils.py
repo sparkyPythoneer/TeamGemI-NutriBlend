@@ -16,9 +16,9 @@ def generate_ai_response(prompt):
 def generate_recipe_ai_prompt(user_profile, user_message):
     # Extract user preferences from the UserProfile model
     username = user_profile.username
-    dietary_preferences = user_profile.dietary_preference
+    dietary_preferences = user_profile.diatary_prefrence
     allergies = user_profile.allergies
-    health_preferences = user_profile.health_preference
+    health_condition = user_profile.health_condition
     ingredient_restrictions = user_profile.ingredient_restrictions.all()
 
     # Construct the prompt incorporating user preferences
@@ -31,13 +31,13 @@ def generate_recipe_ai_prompt(user_profile, user_message):
     if allergies:
         prompt += f"- Allergies: {', '.join(allergies)}\n"
 
-    if health_preferences:
-        prompt += f"- Health preferences: {', '.join(health_preferences)}\n"
+    if health_condition:
+        prompt += f"- Health condition: {', '.join(health_condition)}\n"
 
     if ingredient_restrictions:
         restricted_ingredients = [ingredient.name for ingredient in ingredient_restrictions]
         prompt += f"- Ingredient restrictions: {', '.join(restricted_ingredients)}\n"
 
-    prompt += "Your response must be a valid jso with these keys: 'title', 'cuisine_type', 'meal_category', 'cooking_time', 'step' and 'ingredients'\n"
+    prompt += "Your response must be a valid json with these keys: 'title', 'cuisine_type', 'meal_category', 'cooking_time', 'step' and 'ingredients'\n"
 
     generate_ai_response(prompt)
