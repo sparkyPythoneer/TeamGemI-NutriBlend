@@ -40,4 +40,5 @@ def generate_recipe_ai_prompt(user_profile, user_message):
 
     prompt += "Your response must be a valid json with these keys: 'title', 'cuisine_type', 'meal_category', 'cooking_time', 'step' and 'ingredients'\n"
 
-    generate_ai_response(prompt)
+    ai_response = generate_ai_response(prompt)
+    return ai_response

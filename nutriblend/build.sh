@@ -4,6 +4,7 @@ set -o errexit  # exit when there is an error error
 
 pip install -r requirements.txt
 
+python manage.py migrate
 # python manage.py collectstatic --no-input
 python manage.py makemigrations user_auth
 
