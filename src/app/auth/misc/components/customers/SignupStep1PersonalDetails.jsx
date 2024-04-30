@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 
 import { cn } from '@/utils/classname';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useSignUp } from '../../api';
 import { useCustomerRegisterDetails } from '../../store';
@@ -32,10 +33,9 @@ const registerForm = z.object({
   first_name: z.string({ required_error: 'Enter first name.' }).min(1, { message: 'First name is required' }),
   last_name: z.string({ required_error: 'Enter last name.' }).min(1, { message: 'Last name is required' }),
   email: z.string({ required_error: 'Enter email.' }).email({ message: 'Enter valid email' }),
-  gender: z.string({ required_error: 'Please select gender.' }),
   password: z.string({ required_error: 'Enter password.' }).min(8, "Password must be at least 8 characters").regex(/(?=.*\d)/, "Password must contain a number").regex(/(?=.*[A-Z])/, "Password must contain an uppercase letter")
     .regex(/(?=.*[a-z])/, "Password must contain a lowercase letter").regex(/(?=.*[@#$%^&+=])/, "Password must contain a special character (@#$%^&+=)"),
-  confirm_password: z.string({ required_error: 'Confirm your password.' }),
+  confirm_password: z.string({ required_error: 'Confirm your password.' }).min(8, "Password must be at least 8 characters"),
 });
 
 
@@ -57,7 +57,7 @@ const CustomerSignupForm = ({ onNext }) => {
       password: userData.password,
       confirm_password: userData.confirm_password
     },
-    // resolver: zodResolver(registerForm)
+    resolver: zodResolver(registerForm)
   });
 
 
@@ -66,13 +66,6 @@ const CustomerSignupForm = ({ onNext }) => {
   const [slideout, setslideout] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
   const [showPassword2, setShowPassword2] = useState(false)
-
-
-  const countries = [
-    { value: '+1', flag: '🇺🇸', name: 'US' },
-    { value: '+44', flag: '🇬🇧', name: 'UK' },
-    { value: '+234', flag: '🇳🇬', name: 'NG' },
-  ];
 
 
 
@@ -160,13 +153,13 @@ const CustomerSignupForm = ({ onNext }) => {
       <header>
         <h1 className={cn('flex items-center gap-4 text-3xl lg:text-[2.35rem] text-white font-clash font-bold', displayFont.className )}>
           <span>
-            Get Started
+            Personal Details
           </span>
-          <span className='inline-flex items-center justify-center text-lg bg-white/20 px-4 py-0.5 rounded-lg '>
+          {/* <span className='inline-flex items-center justify-center text-lg bg-white/20 px-4 py-0.5 rounded-lg '>
             1/2
-          </span>
+          </span> */}
         </h1>
-        <p className='text-white mt-1.5 mb-8 text-base font-normal'>Take the next step to the land of opportunities</p>
+        <p className='text-white mt-1.5 mb-8 text-base font-normal'>Take the next step towards healthy eating.</p>
       </header>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
@@ -259,14 +252,14 @@ const CustomerSignupForm = ({ onNext }) => {
             <span className='text-white/70'>By registering and signing in, you agree to our <Link className=' font-semibold text-[0.78rem] text-white hover:underline' href={'/terms'}> Terms & Conditions</Link></span>
           </div>
 
-          <button className="bg-white flex items-center justify-center w-full disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center " type="submit"
+          <button className="bg-white flex items-center justify-center w-full disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center disabled:cursor-not-allowed disabled:opacity-35 transition-colors " type="submit"
             disabled={!hasAgreedToTerms || isLoading}
           >
 
             <span className='flex items-center justify-center gap-4 text-[0.95rem] text-secondary-dark font-medium mx-auto flex-1'>Proceed {isLoading && <SmallSpinner className='text-primary' />}</span>
             <span className='flex items-center justify-center ml-auto bg-primary rounded-full w-9 h-9'><ArrowRight className='text-white' /></span>
           </button>
-          <div className='flex flex-wrap items-center justify-center gap-1 mt-2 mb-8 px-6 py-3 border-[1px] border-white/60 rounded-lg w-full text-sm text-white/70 '>Already have an account? <Link className='text-white text-medium text-sm' href={'/auth/login'}>Sign in</Link></div>
+          <div className='flex flex-wrap items-center justify-center gap-1 mt-2 mb-8 px-6 py-3 border-[1px] border-white/60 rounded-lg w-full text-sm text-white/70 '>Do you already have an account? <Link className='text-white text-medium text-sm' href={'/auth/login'}>Sign in</Link></div>
         </div>
       </form>
     </div>

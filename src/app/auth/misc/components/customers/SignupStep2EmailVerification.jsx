@@ -8,9 +8,9 @@ import { formatAxiosErrorMessage } from '@/utils/errors';
 import { Button, ErrorModal, LoaderBtn } from '@/components/shared';
 
 // import { InfoStar, RightUpArrow } from '../../icons';
-import { useRequestPasswordResetOTP } from '../../api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { useErrorModalState } from '@/app/hooks';
 
 
 
@@ -29,7 +29,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
   const [tokenError, setTokenError] = useState(false)
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const inputRefs = Array(6).fill(0).map(() => React.createRef());
-  const [slide, setslide] = useState<string>("stagnant")
+  const [slide, setslide] = useState("stagnant")
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -90,10 +90,10 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
     }
 
     const code = verificationCode.join('');
-    if(code.length < 6){
+    if (code.length < 6) {
       setTokenError(true)
       return
-  }
+    }
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/auth/verify/`,
@@ -123,13 +123,13 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
     }
   }, [verificationCode])
 
-  const { mutate: requestOTP, isLoading: isRequestingOTP } = useRequestPasswordResetOTP()
-  const getOTP = async () => {
-    requestOTP({ email: user.email }, {
-      onSuccess() {
-      },
-    })
-  }
+  // const { mutate: requestOTP, isLoading: isRequestingOTP } = useRequestPasswordResetOTP()
+  // const getOTP = async () => {
+  //   requestOTP({ email: user.email }, {
+  //     onSuccess() {
+  //     },
+  //   })
+  // }
 
 
 
@@ -163,18 +163,16 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
           {tokenError && <p className='text-red-500 font-[0.85rem] self-start my-1'>Invalid or expired token</p>}
           <aside className='flex justify-between w-full my-4 text-white text-xs'>
             <h2>Didn&apos;t receive the OTP?</h2>
-            <button type="button" id="resendOTP" className='flex items-center gap-4' onClick={getOTP}><FontAwesomeIcon icon={faInfoCircle}/>
+            <button type="button" id="resendOTP" className='flex items-center gap-4' ><FontAwesomeIcon icon={faInfoCircle} />
+              {/* onClick={getOTP} */}
               Resend OTP
-              {
-                isRequestingOTP &&
-                <LoaderBtn width={12} height={12} color='white' />
-              }
+             
             </button>
           </aside>
         </div>
 
         <section className='flex flex-col gap-4 w-fulll'>
-          <span className='btn-secondary text-[0.7rem] px-1.5 text-center py-3 w-full bg-white/50 text-white'>If you  did not see the email in your inbox, kindly check your spam folder</span>
+          <span className='btn-secondary text-[0.7rem] px-1.5 text-center py-3 w-full bg-white/50 text-white rounded-md'>Check your spam folder if you dont&apos; receive an email in your inbox.</span>
           {/* <button className="bg-white flex items-center justify-center w-full disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center disabled:opacity-50" type="submit" disabled={verificationCode.join("").length < 6}>
             <span className=' text-sm md:text-[1.05rem] text-secondary-dark font-medium mx-auto flex-1'>Confirm email</span>
             <span className='flex items-center justify-center ml-auto bg-primary rounded-full w-9 h-9'><RightUpArrow height={14} width={14} className='translate-y-0.5' /></span>
