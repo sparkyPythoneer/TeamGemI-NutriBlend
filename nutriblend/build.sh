@@ -14,5 +14,5 @@ python manage.py makemigrations ai
 # python manage.py makemigrations user_auth
 python manage.py migrate
 
-python manage.py create_superuser
+python manage.py superuser
 
