@@ -5,7 +5,8 @@ import axios from 'axios';
 
 // import { useErrorModalState } from '@/hooks';
 import { formatAxiosErrorMessage } from '@/utils/errors';
-import { Button, ErrorModal, LoaderBtn } from '@/components/shared';
+import { ErrorModal, LoaderBtn } from '@/components/shared';
+import { Button } from '@/components/ui';
 
 // import { InfoStar, RightUpArrow } from '../../icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -180,8 +181,8 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
         </section>
 
 
-        {/* <ErrorModal
-          isErrorModalOpen={isErrorModalOpen}
+        <ErrorModal
+          isErrorModalOpen={true}
           setErrorModalState={setErrorModalState}
           subheading={
             errorModalMessage || 'Something went wrong.'
@@ -196,7 +197,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
               Okay
             </Button>
           </div>
-        </ErrorModal> */}
+        </ErrorModal>
       </form>
     </div>
   );
