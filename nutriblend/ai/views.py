@@ -5,7 +5,7 @@ from rest_framework import permissions
 from main.models import UserProfile
 from .models import Conversation, Message
 from .utils import generate_ai_response, generate_recipe_ai_prompt
-from .serializers import MessageSerializer
+from .serializers import ConversationHistorySerializer, MessageSerializer
 
 class ChatView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -32,3 +32,13 @@ class ChatView(APIView):
         message_serializer = MessageSerializer(messages, many=True)
 
         return Response(message_serializer.data)
+
+
+class ConversationHistoryView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        conversations = Conversation.objects.filter(user=user).order_by('-created_at')
+        serializer = ConversationHistorySerializer(conversations, many=True)
+        return Response(serializer.data)
