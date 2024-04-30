@@ -117,7 +117,7 @@ class Recipes(BaseModel):
     cuisine_type = models.CharField(max_length=225, blank=True, null=True)
     meal_category = models.CharField(max_length=225, blank=True, null=True)
     cooking_time = models.CharField(max_length=225, blank=True, null=True)
-    step = models.TextField()
+    steps = models.TextField()
 
     class Meta:
         verbose_name = "RECIPE"
