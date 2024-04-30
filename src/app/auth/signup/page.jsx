@@ -11,7 +11,7 @@ const RegisterPage = () => {
 
   return (
     <div className='grid place-content-center p-6'>
-      <Link href='/signup/user' className='max-w-xs p-4 rounded-lg bg-muted-'>
+      <Link href='/signup/consumer' className='max-w-xs p-4 rounded-lg bg-muted-'>
 
         <article className='flex flex-col md:flex-row items-center justify-center gap-2'>
           <FontAwesomeIcon icon={faUser} className='text-foreground text-4xl' />

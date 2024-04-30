@@ -7,38 +7,25 @@ import { Country, State, City, ICountry, IState } from 'country-state-city';
 import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 
-import { cn, setAccessToken } from '@/utils';
-import { Select, LoaderBtn, RadioGroup, SelectComboSingle, ErrorModal, Button, Load, SelectComboSingleingOverlay } from '@/components/shared';
+import { ErrorModal, Select, SelectComboSingle, SmallSpinner } from '@/components/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { job_type, work_experiences } from '@/app/(website-main)/e/jobs/misc/constants';
-;
-import { useSignIn } from '../../api/useSignIn';
-import { useTalentOnboardMutation } from '../../api/useOnboardTalent';
-import { RightUpArrow } from '../../icons';
+import { useSignIn, useOnboardNB } from '../../api';
 import { useErrorModalState } from '@/hooks';
-import { useTalentRegisterDetails } from '../../store';
+import { useCustomerRegisterDetails } from '../../store';
+import { cn } from '@/utils/classname';
+import { setAccessToken } from '@/utils/tokens';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { allergies } from '@/constants';
+import ComboBox from '@/components/shared/selectComboSingle';
 
 
 
-const currently_employed = [
-    { name: 'Yes', value: 'true' },
-    { name: 'No', value: 'false' },
-]
-const willing_to_relocate = [
-    { name: 'Yes', value: 'true' },
-    { name: 'No', value: 'false' },
-]
 
 
-
-const TalentDetailsFormResolver = z.object({
-    address: z.string({ required_error: 'Enter address.' }).min(1, { message: 'Home address is required' }),
-    desired_role: z.string({ required_error: 'Enter last name.' }).min(1, { message: 'Last name is required' }),
-    years_of_experience: z.string({ required_error: 'Enter years of experience.' }),
-    stack: z.string({ required_error: 'Enter stack.' }),
-    job_type: z.string({ required_error: 'Enter preffered job type.' }),
-    currently_employed: z.string({ required_error: 'Choose current employment status.' }),
-    willing_to_relocate: z.string({ required_error: 'Choose relocation preference.' }),
+const onboardForm = z.object({
+    username: z.string({ required_error: 'Enter username.' }).min(1, { message: 'Home username is required' }),
+    allergies: z.array(z.string(), { required_error: 'Enter last name.' }),
     country: z.string({ required_error: 'Please select country.' }),
     state: z.string({ required_error: 'Please select state.' }),
 });
@@ -48,8 +35,8 @@ const TalentDetailsFormResolver = z.object({
 
 
 
-const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
-    const { userData, moveToNextStep, setUserData, clearStorage } = useTalentRegisterDetails();
+const UserDetailsForm = ({ user, onDetailsSubmit }) => {
+    const { userData, moveToNextStep, setUserData, clearStorage } = useCustomerRegisterDetails();
     const {
         isErrorModalOpen,
         setErrorModalState,
@@ -63,7 +50,7 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
 
 
     const signIn = useSignIn();
-    const { mutateAsync: onBoardTalent, isLoading: isOnboardingTalent } = useTalentOnboardMutation();
+    const { mutateAsync: onBoardTalent, isLoading: isOnboardingTalent } = useOnboardNB();
     const [slide, setslide] = useState("stagnant")
 
     useEffect(() => {
@@ -96,22 +83,18 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
-    const { handleSubmit, register, formState: { errors, isDirty, isValid }, control, watch, setValue } = useForm < FormData > ({
+    const { handleSubmit, register, formState: { errors, isDirty, isValid }, setError, control, watch, setValue } = useForm({
         defaultValues: {
-            address: userData.address,
-            desired_role: userData.desired_role,
-            years_of_experience: userData.years_of_experience,
-            stack: userData.stack,
-            job_type: userData.job_type,
-            currently_employed: userData.currently_employed,
-            willing_to_relocate: userData.willing_to_relocate,
-            country: userData.country,
-            state: userData.state,
-            city: userData.city,
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            email: userData.email,
+            country_code: userData.country_code,
+            phone_number: userData.phone_number,
+            password: userData.password,
+            confirm_password: userData.confirm_password
         },
-        resolver: zodResolver(TalentDetailsFormResolver)
-    });;
-
+        resolver: zodResolver(onboardForm)
+    });
 
     //////////////////////////////////////////////////////////////////////
     ///////               SAVE INPUTS TO STORE                     ///////
@@ -140,7 +123,7 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
         setStateList(State?.getStatesOfCountry(String(countryCode)))
     }, [countryCode])
 
-    const countryOptions = countryList?.map(country => ({ value: country?.name, label: country.name, code: country?.isoCode }))
+    const countryOptions = countryList?.map(country => ({ value: country?.name, name: country.name, code: country?.isoCode }))
     const stateOptions = React.useMemo(() => {
         return stateList?.map(state => ({
             value: state?.name,
@@ -157,7 +140,7 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
         try {
 
             const userData = {
-                address: data.address,
+                username: data.username,
                 desired_role: data.desired_role,
                 years_of_experience: data.years_of_experience,
                 stack: data.stack.split(','),
@@ -200,11 +183,11 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
                     Kindly complete your profile setup as this would help employers get a quick knowledge of your when you profile is viewed
                 </p>
             </header>
-
+            <ComboBox />
 
             <div className="inputdiv transparent !my-2">
-                <label className='!text-white' htmlFor="address">Home address</label>
-                <input type="text" placeholder="Enter address" className={cn(errors.address && "error",)} {...register('address')} id="address" />
+                <label className='!text-white' htmlFor="username"> username</label>
+                <input type="text" placeholder="Enter username" className={cn(errors.username && "error",)} {...register('username')} id="username" />
             </div>
 
             <div className="flex flex-col ">
@@ -216,19 +199,20 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
                         value={watch("country")}
                         onChange={(val) => {
                             setValue("country", val)
-                            const chosen = countryOptions && countryOptions.filter((country) => country.value.toLowerCase() == val.toLocaleLowerCase())[0]
-                            setValue("country", chosen?.value || "")
-                            countryOptions && setCountryCode(chosen?.code || "")
+                            // const chosen = countryOptions && countryOptions.filter((country) => country.value.toLowerCase() == val.toLocaleLowerCase())[0]
+                            // setValue("country", chosen?.value || "")
+                            // countryOptions && setCountryCode(chosen?.code || "")
                         }}
                         containerClass='!my-2 transparent'
                         itemClass='text-xs'
                         options={countryOptions}
+                        isLoadingOptions={countryOptions ? false : true}
                         valueKey='value'
                         triggerColor='white'
                         transparent
                     />
 
-                    <SelectComboSingle
+                    {/* <SelectComboSingle
                         name='state'
                         placeholder="Select state"
                         value={watch("state")}
@@ -242,15 +226,12 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
                         isLoadingOptions={!stateOptions || watch('country') == undefined}
                         triggerColor='white'
                         transparent
-                    />
+                    /> */}
                 </div>
             </div>
 
-            <div className="inputdiv transparent !my-2">
-                <label className='!text-white' htmlFor="desired_role">What best describes your desired role?</label>
-                <input type="text" placeholder="Enter desired role" className={cn(errors.desired_role && "error",)} {...register('desired_role')} id="desired_role" />
-            </div>
 
+            {/* 
             <Select
                 name={`years_of_experience`}
                 triggerColor='white'
@@ -265,64 +246,36 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
                 errors={errors}
                 containerClass='!my-2 transparent'
                 fullWidth
-            />
-
-            <div className="inputdiv transparent !my-2 text-white">
-                <label className='!text-white' htmlFor="stack">What is your stack? (comma-separated)</label>
-                <input type="text" placeholder="e.g. HTML, CSS, Javascript" className={cn(errors.stack && "error",)} {...register('stack')} id="stack" />
-            </div>
+            /> */}
 
 
-            <Select
-                name={`job_type`}
-                triggerColor='white'
-                value={watch(`job_type`)}
-                onChange={(value) => setValue('job_type', value)}
-                className={cn(watch(`job_type`) == undefined && "!text-white/60")}
-                options={job_type}
-                label='Employment type'
-                labelClass='!text-white'
-                itemClass='text-xs'
-                placeholder="Select job employment type"
-                errors={errors}
+
+
+            <SelectComboSingle
+                name='state'
+                placeholder="Select state"
+                value={watch("allergies")}
+                valueKey='value'
+                onChange={(val) =>
+                    setValue("allergies", val)
+                }
                 containerClass='!my-2 transparent'
-                fullWidth
-            />
-
-
-            <RadioGroup
-                options={currently_employed}
-                onChange={(value) => setValue('currently_employed', value)}
-                label="Are you currently employed?"
-                labelClass='!text-white'
-                containerClass='!my-2'
-                errors={errors}
-                value={watch('currently_employed')}
-                name='job_type'
-                variant="offwhite"
-                size='small'
-                arrangement='row'
-            />
-            <RadioGroup
-                options={willing_to_relocate}
-                onChange={(value) => setValue('willing_to_relocate', value)}
-                label="Are you willing to relocate?"
-                labelClass='!text-white'
-                containerClass='!my-2'
-                errors={errors}
-                value={watch('willing_to_relocate')}
-                name='job_type'
-                variant="offwhite"
-                size='small'
-                arrangement='row'
+                itemClass='text-xs'
+                options={allergies}
+                triggerColor='white'
+                transparent
             />
 
 
 
-            <button className="flex items-center justify-center w-full mt-12 bg-white disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center" type="submit" disabled={!isDirty}>
-                <span className='flex items-center justify-center flex-1 grow gap-x-2 text-sm md:text-[1.05rem] text-secondary-dark font-medium mx-auto'>Create Profile {isOnboardingTalent && <LoaderBtn />}</span>
-                <span className='flex items-center shrink justify-center ml-auto bg-primary rounded-full w-9 h-9'><RightUpArrow height={14} width={14} className='translate-y-0.5' /></span>
+
+            <button className="bg-white flex items-center justify-center w-full disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center disabled:cursor-not-allowed disabled:opacity-35 transition-colors " type="submit"
+            >
+
+                <span className='flex items-center justify-center gap-4 text-[0.95rem] text-secondary-dark font-medium mx-auto flex-1'>Create Profile {isOnboardingTalent && <SmallSpinner className='text-primary' />}</span>
+                <span className='flex items-center justify-center ml-auto bg-primary rounded-full w-9 h-9'><ArrowRight className='text-white' /></span>
             </button>
+
 
 
 
@@ -350,5 +303,5 @@ const TalentDetailsForm = ({ user, onDetailsSubmit }) => {
     );
 };
 
-export default TalentDetailsForm;
+export default UserDetailsForm;
 

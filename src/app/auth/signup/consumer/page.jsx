@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 
-import { CustomerSlideshow, CustomerSignUpFlow } from '../../misc/components/customers';
+import { CustomerSlideshow, CustomerSignUpFlow } from '../../misc/components/consumer';
 
 
 

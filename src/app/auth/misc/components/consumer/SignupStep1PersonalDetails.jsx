@@ -20,11 +20,6 @@ import { ArrowRight } from 'lucide-react';
 import { displayFont } from '@/app/layout';
 
 
-const genders = [
-  { name: 'Male', value: 'M' },
-  { name: 'Female', value: 'F' },
-]
-
 
 
 
