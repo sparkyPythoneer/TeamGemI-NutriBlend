@@ -14,6 +14,5 @@ python manage.py makemigrations ai
 # python manage.py makemigrations user_auth
 python manage.py migrate
 
-if [[ $CREATE_SUPERUSER == "true" ]]; then
-  python manage.py create_superuser
-fi
+python manage.py create_superuser
+
