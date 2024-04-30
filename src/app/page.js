@@ -55,7 +55,7 @@ export default function Home() {
           </LinkButton>
         </div>
 
-        <div className="relative max-w-sm xl:max-w-md animate-slideInRight">
+        <div className="relative max-w-sm xl:max-w-md animate-slideInCircle">
           <Image src="/assets/soup-landing-page.png" alt="health" className="w-full" width={500} height={500} />
     
           <article className="absolute text-center top-[70%] left-0 right-0 bg-red/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">

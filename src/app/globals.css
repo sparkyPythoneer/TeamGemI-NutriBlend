@@ -199,7 +199,7 @@ input:-webkit-autofill:active {
   animation: slideInFromLeft 3s ease-out;
 }
 
-@keyframes slideInFromRight {
+@keyframes slideInFromCircle {
   0% {
     transform: translateX(100%) rotate(360deg);
     opacity: 0;
@@ -210,18 +210,21 @@ input:-webkit-autofill:active {
   }
 }
 
-.animate-slideInRight {
-  animation: slideInFromRight 3s ease-out;
+.animate-slideInCircle {
+  animation: slideInFromCircle 3s ease-out;
 }
-@keyframes typewriter {
-  from {
-    width: 0;
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
   }
-  to {
-    width: 10%;
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
   }
 }
 
-.animate-accordion-up {
-  animation-duration: 4s; /* Adjust this value to increase or decrease the duration */
+.animate-slideInRight {
+  animation: slideInFromRight 3s ease-out;
 }
