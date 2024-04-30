@@ -144,7 +144,7 @@ export default function Home() {
       </section>
       <footer className=" m-20 bg-[#22c55e]">
         <div className="flex flex-col items-center justify-center">
-        <p className="text-center text-sm text-gray-500">Copyright © 2021 NutriBlend</p>
+        <p className="text-center text-sm text-gray-500">Copyright © 2024 NutriBlend</p>
     
         </div>
       </footer>
