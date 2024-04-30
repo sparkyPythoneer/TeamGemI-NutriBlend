@@ -16,6 +16,10 @@ class Ingredients(BaseModel):
     class Meta:
         verbose_name = "INGREDIENT"
         verbose_name_plural = "INGREDIENTS"
+    
+    def __str__(self):
+        return self.name
+    
         
 class UserProfile(BaseModel):
 
@@ -44,6 +48,9 @@ class UserProfile(BaseModel):
     class Meta:
         verbose_name = "USER PROFILE"
         verbose_name_plural = "USER PROFILES"
+    
+    def __str__(self):
+        return self.username or str(self.user)
 
     @classmethod
     def create_profile(cls, user, **kwargs):
@@ -100,6 +107,9 @@ class ChefProfile(models.Model):
     class Meta:
         verbose_name = "CHEF PROFILE"
         verbose_name_plural = "CHEF PROFILES"
+    
+    def __str__(self):
+        return self.business_name or str(self.user)
 
 
     @classmethod
@@ -122,6 +132,9 @@ class Recipes(BaseModel):
     class Meta:
         verbose_name = "RECIPE"
         verbose_name_plural = "RECIPES"
+    
+    def __str__(self):
+        return self.title
 
 
 class RecipeDetails(BaseModel):
@@ -133,6 +146,9 @@ class RecipeDetails(BaseModel):
     class Meta:
         verbose_name = "RECIPE DETAIL"
         verbose_name_plural = "RECIPE DETAILS"
+    
+    def __str__(self):
+        return f"{self.recipe.title} - {self.ingredients.name}"
 
 
 

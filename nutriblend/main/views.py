@@ -73,3 +73,25 @@ class RecipeDetailView(generics.RetrieveAPIView):
     serializer_class = RecipeSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        ingredient_id = request.data.get('ingredient_id') 
+        
+        # Retrieve the ingredient from the recipe details
+        recipe_detail = instance.recipedetails_set.filter(ingredients=ingredient_id).first()
+        if not recipe_detail:
+            return Response({"error": "Ingredient not found in recipe"}, status=status.HTTP_404_NOT_FOUND)
+        
+        ingredient = recipe_detail.ingredients
+        
+        # Add the ingredient to the user's ingredient_restrictions field
+        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile.ingredient_restrictions.add(ingredient)
+
+        # Delete the ingredient from the recipe
+        recipe_detail.delete()
+        
+        # Serialize the updated recipe and return it
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

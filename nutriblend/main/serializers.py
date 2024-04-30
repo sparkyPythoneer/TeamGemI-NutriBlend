@@ -27,7 +27,7 @@ class ChefProfileSerializer(serializers.ModelSerializer):
 class IngredientsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredients
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
 
 class RecipeDetailsSerializer(serializers.ModelSerializer):
     ingredients = IngredientsSerializer()
