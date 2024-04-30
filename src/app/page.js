@@ -5,7 +5,6 @@ import { faAppleAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import Image from "next/image";
-import { url } from "inspector";
 
 export default function Home() {
   return (
