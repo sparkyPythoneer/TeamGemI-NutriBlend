@@ -13,13 +13,13 @@ export default function Home() {
     <main className="min-h-screen m-7">
       <header className="flex items-center justify-between w-full p-5 border-b-[0.5px] border-[#22c55e]">
         <Link href="/"
-          className="flex items-center gap-2 text-lg font-bold"
+          className="flex items-center gap-2 text-lg font-bold "
         >
-          NutriBlend
+          <span className="text-white animate-pulse">NutriBlend</span>
           <FontAwesomeIcon icon={faAppleAlt} className="text-primary animate-slideInRight" width={20} height={20} />
         </Link>
 
-        <nav className="animate-fadeIn">
+        <nav className="">
           <ul className="flex items-center space-x-4">
             <li>
               <Link href="/#about">About</Link>
