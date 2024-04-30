@@ -1,3 +1,5 @@
+
+
 import { LinkButton } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { faApple } from "@fortawesome/free-brands-svg-icons";
@@ -8,16 +10,16 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-12">
+    <main className="min-h-screen m-7">
       <header className="flex items-center justify-between w-full p-5 border-b-[0.5px] border-[#22c55e]">
         <Link href="/"
           className="flex items-center gap-2 text-lg font-bold"
         >
           NutriBlend
-          <FontAwesomeIcon icon={faAppleAlt} className="text-primary" width={20} height={20} />
+          <FontAwesomeIcon icon={faAppleAlt} className="text-primary animate-slideInRight" width={20} height={20} />
         </Link>
 
-        <nav>
+        <nav className="animate-fadeIn">
           <ul className="flex items-center space-x-4">
             <li>
               <Link href="/#about">About</Link>
@@ -34,13 +36,13 @@ export default function Home() {
       </header>
 
 
-      <section  className="flex flex-col lg:flex-row items-center justify-between gap-8 max-lg:justify-center w-full px-[30px] mt-[10vh] py-10 xl:px-[10vw]">
-        <div className="py-6 lg:py-12">
+      <section  className=" flex flex-col lg:flex-row items-center justify-between gap-8 max-lg:justify-center w-full px-[30px] mt-[10vh] py-10 xl:px-[10vw] ">
+        <div className="py-6 lg:py-12 animate-slideIn">
           <h6 className="text-sm text-primary py-4 font-medium">
             ACT HEALTHY. BE HEALTHY. EAT HEALTHY.
           </h6>
 
-          <h1 className="text-5xl xl:text-6xl font-bold text-left max-xl:max-w-sm xl:max-w-md">
+          <h1 className="text-5xl xl:text-6xl font-bold text-left max-xl:max-w-sm xl:max-w-md ">
             Life is great, make it better with foods that don&apos;t harm you
           </h1>
           <p className=" text-xl my-3 text-gray-500 text-left  max-w-sm">
@@ -53,7 +55,7 @@ export default function Home() {
           </LinkButton>
         </div>
 
-        <div className="relative max-w-sm xl:max-w-md">
+        <div className="relative max-w-sm xl:max-w-md animate-slideInRight">
           <Image src="/assets/soup-landing-page.png" alt="health" className="w-full" width={500} height={500} />
     
           <article className="absolute text-center top-[70%] left-0 right-0 bg-red/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">
@@ -78,12 +80,12 @@ export default function Home() {
             <div className="absolute inset-0 bg-opacity-10 z-10" style={{backgroundImage: "url('/assets/AdobeStock_248929619_Preview.jpeg')", filter: "blur(5px)"}}></div>
             <div className="relative z-20 flex p-10 items-center">
                 <div>
-                    <h3 className="relative text-[100px]   leading-none my-20 mx-20 font-bold text-center text-[#22c55e] " style={{ fontFamily: "'Nothing You Could Do', cursive" }}>
+                    <h3 className="relative text-[100px] animate-bounce duration-6000 repeat-infinite  leading-none my-20 mx-20 font-bold text-center text-[#22c55e] " style={{ fontFamily: "'Nothing You Could Do', cursive" }}>
                     About us
                     </h3>
                 </div>
                 <div>
-                    <p className="relative text-[20px]  text-center ml-[100px] border-l-8 border-lime-700 h-[300px] px-10 py-20 text-white">
+                    <p className="relative text-[20px]  text-center ml-[100px] border-l-8 border-lime-700 h-[300px] px-10 py-20 text-white ">
                     NutriBlend is a web app using the Gemini AI API that helps you create a meal plan based on your health needs and preferences.
                     It uses AI to analyze your health data and suggest the best meals for you.
                     It also allows you to create a customized health plan based on your health goals.
@@ -141,9 +143,9 @@ export default function Home() {
           </article>
         </section>
       </section>
-      <footer className=" m-20 bg-[#22c55e]">
+      <footer className="my-20 h-20 bg-[#22c55e]">
         <div className="flex flex-col items-center justify-center">
-        <p className="text-center text-sm text-gray-500">Copyright © 2024 NutriBlend</p>
+        <p className="text-center text-sm py-10 text-gray-500">Copyright © 2024 NutriBlend</p>
     
         </div>
       </footer>
