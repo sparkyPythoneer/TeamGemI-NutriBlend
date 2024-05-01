@@ -1,9 +1,9 @@
-from pathlib import Path
-
 from datetime import timedelta
+from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,14 +16,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", default=get_random_secret_key(), cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ['nutriblend.onrender.com', '127.0.0.1', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ["nutriblend.onrender.com", "127.0.0.1", "localhost", "0.0.0.0"]
+
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -31,23 +30,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Local.
     "core",
     "user_auth",
     "main",
     "ai",
-
     # Third party
     "import_export",
     "corsheaders",
-
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -115,8 +111,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
-    # 'EXCEPTION_HANDLER': 'helpers.custom_exception.custom_exception_handler',
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 # DRF Simple JWT
@@ -155,10 +150,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user_auth.User"
 
-# DEFAULT_OTP = config("DEFAULT_OTP", cast=str)
-
-DEFAULT_OTP = "1111"
+GOOGLE_API_KEY = config("GOOGLE_API_KEY")
 
 OTP_SECRET = config("OTP_SECRET", cast=str)
 
-GOOGLE_API_KEY = config("GOOGLE_API_KEY")
+SMS_API_KEY = config("SMS_API_KEY")
+SMS_TEMPLATE_ID = config("SMS_TEMPLATE_ID")
