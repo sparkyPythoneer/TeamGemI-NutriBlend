@@ -85,7 +85,7 @@ def generate_recipe_ai_prompt(user_profile, user_message):
     }
 
     # Construct the prompt with structured data
-    prompt = f"Generate a recipe for {username} based on the following:\n"
+    prompt = f"Generate a recipe for based on the following:\n"
     prompt += f"- User request: {user_message}\n"
     prompt += f"- Preferences: {json.dumps(preferences)}\n"
     prompt += "Your response must be only a valid JSON with these keys: 'title', 'cuisine_type', 'meal_category', 'cooking_time', 'steps' (list of steps), and 'ingredients' (list of ingredients with quantities) using the following structure:\n"
