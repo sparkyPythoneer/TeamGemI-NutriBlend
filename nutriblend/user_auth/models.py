@@ -64,6 +64,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         email: str,
         password: str,
         phone: str,
+        user_type : str,
         middle_name: Optional[str] = None,
     ) -> bool:
         """ """
@@ -75,6 +76,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             last_name=last_name.capitalize(),
             email=email,
             password=password,
+            user_type=user_type,
             phone=phone,
         )
         otp = OTP.get_otp(type="REGISTRATION", recipient=phone)

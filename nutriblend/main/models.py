@@ -61,8 +61,8 @@ class UserProfile(BaseModel):
         return profile
 
     @classmethod
-    def update_profile(cls, uuid, **kwargs):
-        profile = cls.objects.get(user__id=uuid)
+    def update_profile(cls, user, **kwargs):
+        profile = cls.objects.get(user=user)
         for key, value in kwargs.items():
             setattr(profile, key, value)
         profile.save()
@@ -74,8 +74,9 @@ class UserProfile(BaseModel):
         profile.delete()
 
     @classmethod
-    def get_profile(cls, uuid):
-        return cls.objects.get(user__id=uuid)
+    def get_profile(cls, user):
+        profile_detail = cls.objects.get(user=user)
+        return profile_detail
 
 
 class ChefProfile(models.Model):
@@ -93,7 +94,7 @@ class ChefProfile(models.Model):
     phone_number = models.CharField(max_length=13, blank=True, null=True)
     address = models.TextField()
     rating = models.IntegerField(default=0)
-    review = models.TextField()
+    review = models.TextField(null=True, blank=True)
     order_counts = models.IntegerField(default=0)
     specialties = models.CharField(max_length=255, blank=True, null=True)
     experience = models.IntegerField(default=0)
@@ -114,6 +115,19 @@ class ChefProfile(models.Model):
     @classmethod
     def create_chef_profile(cls, user, **kwargs):
         chef_profile = cls.objects.create(user=user, **kwargs)
+        return chef_profile
+    
+    @classmethod
+    def get_chef_profile(cls, user):
+        chef_detail = cls.objects.get(user=user)
+        return chef_detail
+    
+    @classmethod
+    def update_chef_profile(cls, user, **kwargs):
+        chef_profile = cls.objects.get(user=user)
+        for key, value in kwargs.items():
+            setattr(chef_profile, key, value)
+        chef_profile.save()
         return chef_profile
 
 
