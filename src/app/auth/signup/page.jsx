@@ -11,7 +11,7 @@ const RegisterPage = () => {
 
   return (
     <div className='flex flex-row justify-center gap-10 mt-48 ml-40 animate-slideIn'>
-      <Link href='/auth/signup/customer' className='max-w-xs p-4 rounded-lg border-[#22c55e] border-2 bg-muted-'>
+      <Link href='/auth/signup/user' className='max-w-xs p-4 rounded-lg border-[#22c55e] border-2 bg-muted-'>
 
         <article className='flex flex-col md:flex-row items-center justify-center gap-4'>
           <FontAwesomeIcon icon={faUser} className='text-foreground text-4xl' />
