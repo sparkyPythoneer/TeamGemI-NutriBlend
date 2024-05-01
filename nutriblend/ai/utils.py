@@ -179,10 +179,8 @@ def suggest_substitute(user_profile, recipe_detail, ingredient):
                     ]
                 }\n'''
     prompt += "This field is required.\n"
-    print("---prompt--", prompt)
 
     ai_response = generate_ai_response(prompt)
-    print("---ai_response----", ai_response)
 
     try:
         response_data = json.loads(ai_response)
@@ -191,14 +189,13 @@ def suggest_substitute(user_profile, recipe_detail, ingredient):
         return None
 
     ingredients = response_data.get('ingredients', [])
-    print("---ingredients---", ingredients)
     for ingredient in ingredients:
         # Assuming you have an Ingredients model with a name field
-        ingredient_obj, created = Ingredients.objects.get_or_create(name=ingredient.get('name'))
-        RecipeDetails.objects.create(
-            recipe=recipe_detail.recipe,
-            ingredients=ingredient_obj,
-            quantity=ingredient.get('quantity'),
-        )
+        Ingredients.objects.get_or_create(name=ingredient.get('name'))
+        # RecipeDetails.objects.create(
+        #     recipe=recipe_detail.recipe,
+        #     ingredients=ingredient_obj,
+        #     quantity=ingredient.get('quantity'),
+        # )
 
     return ingredients

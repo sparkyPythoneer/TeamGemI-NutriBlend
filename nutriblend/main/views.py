@@ -82,7 +82,6 @@ class RecipeDetailView(generics.RetrieveAPIView):
         instance = self.get_object()
         ingredient_id = request.data.get('ingredient_id')
         should_sub = self.request.query_params.get('should_sub', False) == 'true'
-        print("---should_sub---", should_sub)
         
         # Retrieve the ingredient from the recipe details
         recipe_detail = instance.recipedetails_set.filter(ingredients=ingredient_id).first()
@@ -96,9 +95,7 @@ class RecipeDetailView(generics.RetrieveAPIView):
         user_profile.ingredient_restrictions.add(ingredient)
 
         if should_sub:
-            print("Trueeeee-----")
             suggested_ingredients = suggest_substitute(user_profile, recipe_detail, ingredient)
-            ("---suggested_ingredients----", suggested_ingredients)
             
         # Delete the ingredient from the recipe
         recipe_detail.delete()
