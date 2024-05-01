@@ -93,7 +93,7 @@ class ChefProfile(models.Model):
     phone_number = models.CharField(max_length=13, blank=True, null=True)
     address = models.TextField()
     rating = models.IntegerField(default=0)
-    review = models.TextField()
+    review = models.TextField(null=True, blank=True)
     order_counts = models.IntegerField(default=0)
     specialties = models.CharField(max_length=255, blank=True, null=True)
     experience = models.IntegerField(default=0)
