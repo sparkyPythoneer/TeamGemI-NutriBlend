@@ -12,12 +12,12 @@ python manage.py makemigrations main
 python manage.py makemigrations ai
 
 # python manage.py makemigrations user_auth
-python manage.py migrate user_auth
-python manage.py migrate core
-python manage.py migrate main
-python manage.py migrate ai
+# python manage.py migrate user_auth
+# python manage.py migrate core
+# python manage.py migrate main
+# python manage.py migrate ai
 
 python manage.py migrate
 
-#python manage.py superuser
+python manage.py superuser
 
