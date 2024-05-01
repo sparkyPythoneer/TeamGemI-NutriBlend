@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
@@ -18,26 +19,26 @@ import { cn } from "@/utils/classname";
 
 export default function Combobox({ options, placeholder, isLoadingOptions, containerClass, labelClass, label, withIcon, name, value, onChange }) {
     const [open, setOpen] = useState(false);
-    console.log(options)
 
+    
+    const optionsArray = options ?? [];
 
     const handleSelect = (currentValue) => {
-        const selectedOption = options?.find(option => {
-            const optionValue = option.value?.toLowerCase();
-            return optionValue === String(currentValue).toLowerCase();
+        const selectedOption = optionsArray.find(option => {
+            const optionValue = option?.value?.toLowerCase();
+            return optionValue === String(currentValue)?.toLowerCase();
         }) || {};
-        const selectedValue = selectedOption.value || '';
+        const selectedValue = selectedOption?.value || '';
         onChange(String(selectedValue));
         setOpen(false);
     }
 
-
+    const selectedOption = optionsArray.find(option => option?.value === value) ?? {};
+    const selectedName = selectedOption?.name || placeholder || "Select...";
 
     return (
         <div className={cn("inputdiv", withIcon && "withicon", containerClass)}>
-
             {label && <label className={cn(labelClass)} htmlFor={name}>{label}</label>}
-
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
@@ -47,12 +48,7 @@ export default function Combobox({ options, placeholder, isLoadingOptions, conta
                         className="w-[200px] justify-between"
                         onClick={() => setOpen(!open)}
                     >
-                        {
-                            (value && options) ? (
-                                options?.find((option) => option.value === value)?.name
-                            ) : (
-                                placeholder || "Select..."
-                            )}
+                        {selectedName}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -61,31 +57,24 @@ export default function Combobox({ options, placeholder, isLoadingOptions, conta
                         <CommandInput placeholder="Search..." />
                         <CommandEmpty>No option found.</CommandEmpty>
                         <CommandGroup>
-                            {
-                                isLoadingOptions && (
-                                    <CommandItem disabled>
-                                        <Check className="mr-2 h-4 w-4 opacity-0" />
-                                        Loading...
-                                    </CommandItem>
-                                )
-                            }
-                            {
-                                (!isLoadingOptions && options) && options?.map((option) => (
-                                    <CommandItem
-                                        key={option.value}
-                                        value={option.value}
-                                        onSelect={(currentValue) => handleSelect(currentValue)}
-
-                                    >
-                                        <Check
-                                            className={
-                                                value === option.value ? "mr-2 h-4 w-4 opacity-100" : "opacity-0"
-                                            }
-                                        />
-                                        {option.name}
-                                    </CommandItem>
-                                ))
-                            }
+                            {isLoadingOptions && (
+                                <CommandItem disabled>
+                                    <Check className="mr-2 h-4 w-4 opacity-0" />
+                                    Loading...
+                                </CommandItem>
+                            )}
+                            {!isLoadingOptions && options?.map((option) => (
+                                <CommandItem
+                                    key={option?.value}
+                                    value={option?.value}
+                                    onSelect={(currentValue) => handleSelect(currentValue)}
+                                >
+                                    <Check
+                                        className={value === option?.value ? "mr-2 h-4 w-4 opacity-100" : "opacity-0"}
+                                    />
+                                    {option?.name}
+                                </CommandItem>
+                            ))}
                         </CommandGroup>
                     </Command>
                 </PopoverContent>
@@ -93,3 +82,4 @@ export default function Combobox({ options, placeholder, isLoadingOptions, conta
         </div>
     );
 }
+

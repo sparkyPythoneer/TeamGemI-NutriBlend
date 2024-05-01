@@ -66,6 +66,21 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = "DialogFooter"
 
+const DialogBody = ({
+  className,
+  ...props
+}) => {
+  return (
+      <div
+          className={cn(
+              'relative rounded-[1.25rem]',
+              className
+          )}
+          {...props}
+      />
+  );
+};
+DialogBody.displayName = 'DialogBody';
 const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
@@ -87,6 +102,7 @@ export {
   DialogPortal,
   DialogOverlay,
   DialogClose,
+  DialogBody,
   DialogTrigger,
   DialogContent,
   DialogHeader,
@@ -94,3 +110,4 @@ export {
   DialogTitle,
   DialogDescription,
 }
+// Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle

@@ -61,3 +61,22 @@ export const allergies = [
     { "name": "Mandarins", "value": "Mandarins" },
     { "name": "Satsumas", "value": "Satsumas" }
 ]
+
+
+export const diet_choices = [
+    { "name": "Vegetarian", "value": "VEG" },
+    { "name": "Vegan", "value": "VEGN" },
+    { "name": "Gluten Free", "value": "GF" },
+    { "name": "Keto", "value": "KF" },
+    { "name": "Paleo", "value": "PF" },
+    { "name": "Lactose Free", "value": "LF" },
+    { "name": "Dairy Free", "value": "DF" },
+    { "name": "Halal", "value": "HF" },
+    { "name": "Kosher", "value": "KF" },
+    { "name": "No Preferences", "value": "NOP" }
+]
+
+
+
+
+

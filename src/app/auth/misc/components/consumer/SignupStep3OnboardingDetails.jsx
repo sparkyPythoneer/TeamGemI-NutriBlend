@@ -14,20 +14,24 @@ import { useErrorModalState } from '@/hooks';
 import { useCustomerRegisterDetails } from '../../store';
 import { cn } from '@/utils/classname';
 import { setAccessToken } from '@/utils/tokens';
-import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui';
-import { allergies } from '@/constants';
+import { ArrowRight, Check } from 'lucide-react';
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
+import { allergies, diet_choices } from '@/constants';
 import ComboBox from '@/components/shared/selectComboSingle';
+import { displayFont } from '@/app/layout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 
 
 
 
 const onboardForm = z.object({
-    username: z.string({ required_error: 'Enter username.' }).min(1, { message: 'Home username is required' }),
-    allergies: z.array(z.string(), { required_error: 'Enter last name.' }),
+    username: z.string({ required_error: 'Enter username.' }).min(1, { message: 'username is required' }),
+    allergies: z.array(z.string()),
     country: z.string({ required_error: 'Please select country.' }),
     state: z.string({ required_error: 'Please select state.' }),
+    dietary_preference: z.string({ required_error: 'Select dietary preference.' }),
 });
 
 
@@ -85,13 +89,11 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
     //////////////////////////////////////////////////////////////////////
     const { handleSubmit, register, formState: { errors, isDirty, isValid }, setError, control, watch, setValue } = useForm({
         defaultValues: {
-            first_name: userData.first_name,
-            last_name: userData.last_name,
-            email: userData.email,
-            country_code: userData.country_code,
-            phone_number: userData.phone_number,
-            password: userData.password,
-            confirm_password: userData.confirm_password
+            username: userData.username,
+            dietary_preference: userData.dietary_preference,
+            country: userData.country,
+            state: userData.state,
+            allergies: userData.allergies,
         },
         resolver: zodResolver(onboardForm)
     });
@@ -173,88 +175,142 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
                     slide == "out" ? "translate-x-[-120%] duration-500" : "")}
         >
             <header className='flex flex-col self-start '>
-                <h1 className=' text-3xl md:text-[2.35rem] text-white font-clash font-medium'>
+                <h1 className={cn(' text-3xl md:text-[2.35rem] text-white font-semibold', displayFont.className)}>
                     Let&apos;s help set up your <br className='max-xs:hidden lg:max-xl:hidden' /> profile
                     <span className='inline-block items-center justify-center text-lg bg-white/20 px-4 py-0.5 rounded-lg ml-2.5 translate-y-[-1.5px]'>
                         2/2
                     </span>
                 </h1>
                 <p className="text-[#BCBCBC] text-sm md:font-base mt-1 mb-6">
-                    Kindly complete your profile setup as this would help employers get a quick knowledge of your when you profile is viewed
+                    Kindly complete your profile setup to help us fine tune your experience.
                 </p>
             </header>
-            <ComboBox />
 
-            <div className="inputdiv transparent !my-2">
-                <label className='!text-white' htmlFor="username"> username</label>
-                <input type="text" placeholder="Enter username" className={cn(errors.username && "error",)} {...register('username')} id="username" />
+            <div className='inputdiv transparent  my-2'>
+                <label className='!text-white' htmlFor="last_name">Username</label>
+                <input type="text" placeholder="Choose a username" className={cn(errors.username && "error", "!bg-white/20 text-white placeholder:text-white/60")} {...register('username')} id="username" />
+                {errors.username && <p className='formerror'>{errors.username.message}</p>}
             </div>
 
             <div className="flex flex-col ">
-                <label className='text-white text-sm'>Current Location</label>
-                <div className="grid w-full flex-col sm:grid-cols-2 items-center sm:gap-4">
-                    <SelectComboSingle
-                        name='country'
-                        placeholder="Select Country"
-                        value={watch("country")}
-                        onChange={(val) => {
-                            setValue("country", val)
-                            // const chosen = countryOptions && countryOptions.filter((country) => country.value.toLowerCase() == val.toLocaleLowerCase())[0]
-                            // setValue("country", chosen?.value || "")
-                            // countryOptions && setCountryCode(chosen?.code || "")
-                        }}
-                        containerClass='!my-2 transparent'
-                        itemClass='text-xs'
-                        options={countryOptions}
-                        isLoadingOptions={countryOptions ? false : true}
-                        valueKey='value'
-                        triggerColor='white'
-                        transparent
-                    />
+                <label className='text-white text-sm'>Location</label>
 
-                    {/* <SelectComboSingle
-                        name='state'
-                        placeholder="Select state"
-                        value={watch("state")}
-                        valueKey='value'
-                        onChange={(val) =>
-                            setValue("state", val)
-                        }
-                        containerClass='!my-2 transparent'
-                        itemClass='text-xs'
-                        options={stateOptions}
-                        isLoadingOptions={!stateOptions || watch('country') == undefined}
-                        triggerColor='white'
-                        transparent
-                    /> */}
+                <div className="grid w-full flex-col sm:grid-cols-2 items-center sm:gap-4">
+                    <Popover>
+                        <PopoverTrigger>
+                            <button className={cn("w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("country")) ? "text-white" : "text-white/60")} type="button"   >
+                                {
+                                    watch("country") ? watch("country") : "Select Country"
+                                }
+                            </button>
+                        </PopoverTrigger>
+
+                        <PopoverContent>
+                            <div className='flex flex-col max-h-96 overflow-y-scroll'>
+
+                                {
+                                    countryOptions && countryOptions.map((country) => (
+                                        <button
+                                            key={country.value}
+                                            onClick={() => {
+                                                setValue("country", country.value)
+                                                setCountryCode(country.code)
+                                            }}
+                                            className='flex items-center justify-between w-full py-2 px-3 hover:bg- hover:text-primary rounded-lg text-primary text-center transition-colors'
+                                        >
+                                            <span className='text-left'>{country.value}</span>
+                                            <span className={cn("", watch("country") === country?.value ? " opacity-100" : "opacity-0")}>
+                                                <Check className='text-primary' />
+                                            </span>
+                                        </button>
+                                    ))
+                                }
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+
+                    <Popover>
+                        <PopoverTrigger>
+                            <button className={cn("w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("state")) ? "text-white" : "text-white/60")} type="button"   >
+                                {
+                                    watch("state") ? watch("state") : "Select State"
+                                }
+                            </button>
+                        </PopoverTrigger>
+
+                        <PopoverContent>
+                            <div className='flex flex-col max-h-96 overflow-y-scroll'>
+
+                                {
+                                    stateOptions && stateOptions.map((state) => (
+                                        <button
+                                            key={state.value}
+                                            onClick={() => {
+                                                setValue("state", state.value)
+                                                // setCountryCode(country.code)
+                                            }}
+                                            className='flex items-center justify-between w-full py-2 px-3 hover:bg- hover:text-primary rounded-lg text-primary text-center transition-colors'
+                                        >
+                                            <span className='text-left'>{state.value}</span>
+                                            <span className={cn("", watch("state") === state?.value ? " opacity-100" : "opacity-0")}>
+                                                <Check className='text-primary' />
+                                            </span>
+                                        </button>
+                                    ))
+                                }
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </div>
 
 
-            {/* 
-            <Select
-                name={`years_of_experience`}
-                triggerColor='white'
-                value={watch(`years_of_experience`)}
-                onChange={(value) => setValue('years_of_experience', value)}
-                className={cn(watch(`years_of_experience`) == undefined && "!text-white/60")}
-                options={work_experiences}
-                label='Work experience in the stated role'
-                labelClass='!text-white'
-                itemClass='text-xs'
-                placeholder="Select years of experience"
-                errors={errors}
-                containerClass='!my-2 transparent'
-                fullWidth
-            /> */}
+            <div className='flex flex-col trasparent my-2'>
+            <label className='text-white text-sm'>Dietary Preference</label>
 
+                <Popover>
+                    <PopoverTrigger>
+                        <button className={cn("w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("dietary_preference")) ? "text-white" : "text-white/60")} type="button"   >
+                            {
+                                watch("dietary_preference") ?
+                                    diet_choices.find(choice => choice.value == watch("dietary_preference"))?.name :
+                                    "Select Dietary Preference"
+                            }
+                        </button>
+                    </PopoverTrigger>
+
+                    <PopoverContent>
+                        <div className='flex flex-col max-h-96 overflow-y-scroll'>
+
+                            {
+                                diet_choices && diet_choices.map((dietary_preference) => (
+                                    <button
+                                        key={dietary_preference.value}
+                                        onClick={() => {
+                                            setValue("dietary_preference", dietary_preference.value)
+                                            // setCountryCode(country.code)
+                                        }}
+                                        className='flex items-center justify-between w-full py-2 px-3 hover:bg- hover:text-primary rounded-lg text-primary text-center transition-colors'
+                                    >
+                                        <span className='text-left'>{dietary_preference.name}</span>
+                                        <span className={cn("", watch("dietary_preference") === dietary_preference?.value ? " opacity-100" : "opacity-0")}>
+                                            <Check className='text-primary' />
+                                        </span>
+                                    </button>
+                                ))
+                            }
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </div>
 
 
 
             <SelectComboSingle
                 name='state'
+                label="Allergies"
                 placeholder="Select state"
-                value={watch("allergies")}
+                value={watch("allergies") || ""}
                 valueKey='value'
                 onChange={(val) =>
                     setValue("allergies", val)
