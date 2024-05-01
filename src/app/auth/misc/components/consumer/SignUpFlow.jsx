@@ -7,7 +7,7 @@ import UserDetailsForm from './SignupStep3OnboardingDetails';
 
 
 const CustomerSignUpFlow = () => {
-  const { step, userData, moveToNextStep, setUserData, clearStorage } = useCustomerRegisterDetails();
+  const { step, userData, moveToNextStep, setUserData } = useCustomerRegisterDetails();
 
   const handleSignUp = (data) => {
     setUserData(data);
