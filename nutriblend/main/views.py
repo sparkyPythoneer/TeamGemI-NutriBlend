@@ -31,8 +31,8 @@ class UserProfileAPIView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, id):
-        profile = UserProfile.update_profile(id, **request.data)
+    def patch(self, request):
+        profile = UserProfile.update_profile(user=request.user, **request.data)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
@@ -40,16 +40,10 @@ class UserProfileAPIView(APIView):
         UserProfile.delete_profile(id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get_object(self, user_profile_id):
-        try:
-            return UserProfile.objects.select_related('user').get(user__id=user_profile_id)
-        except UserProfile.DoesNotExist:
-            raise Http404
 
-    def get(self, request, user_profile_id):
-        profile = self.get_object(user_profile_id)
-        # print("profiel---------", profile)
-        serializer = UserProfileSerializer(profile)
+    def get(self, request):
+        profile_detail = UserProfile.get_profile(user=request.user, **request.data)
+        serializer = UserProfileSerializer(profile_detail)
         return Response(serializer.data)
 
 
@@ -69,16 +63,14 @@ class ChefProfileAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    def get_object(self, chef_profile_id):
-        try:
-            return ChefProfile.objects.select_related('user').get(user__id=chef_profile_id)
-        except ChefProfile.DoesNotExist:
-            raise Http404
-
-    def get(self, request, chef_profile_id):
-        chef_profile = self.get_object(chef_profile_id)
-        # print("profiel---------", profile)
-        serializer = ChefProfileSerializer(chef_profile)
+    def get(self, request):
+        chef_profile_detail = ChefProfile.get_chef_profile(user=request.user, **request.data)
+        serializer = ChefProfileSerializer(chef_profile_detail)
+        return Response(serializer.data)
+    
+    def patch(self, request):
+        profile = ChefProfile.update_chef_profile(user=request.user, **request.data)
+        serializer = ChefProfileSerializer(profile)
         return Response(serializer.data)
 
 
