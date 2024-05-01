@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nothing+You+Could+Do&display=swap');
 
 @layer base {
   :root {
@@ -170,4 +170,61 @@ input:-webkit-autofill:active {
   label {
     @apply text-foreground text-sm;
   }
+}
+/* Add this to your CSS file */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 5s ease-in-out infinite;
+}
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideInFromLeft 3s ease-out;
+}
+
+@keyframes slideInFromCircle {
+  0% {
+    transform: translateX(100%) rotate(360deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) rotate(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInCircle {
+  animation: slideInFromCircle 3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInFromRight 3s ease-out;
 }
