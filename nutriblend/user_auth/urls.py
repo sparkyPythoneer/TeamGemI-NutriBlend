@@ -1,7 +1,6 @@
-
 from django.urls import path
 
-from . import views
+from user_auth import views
 
 
 # Create your url pattern(s) here.
