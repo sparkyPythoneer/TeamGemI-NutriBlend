@@ -74,7 +74,7 @@ class RecipeDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
 
-    def destroy(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         ingredient_id = request.data.get('ingredient_id') 
         
@@ -84,6 +84,7 @@ class RecipeDetailView(generics.RetrieveAPIView):
             return Response({"error": "Ingredient not found in recipe"}, status=status.HTTP_404_NOT_FOUND)
         
         ingredient = recipe_detail.ingredients
+        print("----ingredient---", ingredient)
         
         # Add the ingredient to the user's ingredient_restrictions field
         user_profile = UserProfile.objects.get(user=request.user)
