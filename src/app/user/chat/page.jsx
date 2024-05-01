@@ -77,9 +77,11 @@ const ChatDashboard = () => {
                         <ul className="list-disc pl-6">
                             {typeof AIResponse?.ingredients}
                             {
-                                typeof AIResponse?.ingredients == 'object' && Object.entries(AIResponse?.ingredients)?.map((ingredient, index) => (
-                                    <li key={index}>{ingredient?.quantity} {ingredient?.name}</li>
-                                ))
+                                typeof AIResponse?.ingredients == 'object' && Object.entries(AIResponse?.ingredients)?.map((ingredient, index) => {
+                                    console.log(ingredient)
+                                    return (
+                                    <li key={index}>{ingredient[1]?.quantity} {ingredient[1]?.name}</li>
+                                )})
                             }
                         </ul>
                     </div>
