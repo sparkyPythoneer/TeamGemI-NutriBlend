@@ -1,13 +1,12 @@
 'use client'
 
-import * as React from 'react';
 import Image from 'next/image';
 
 import { CustomerSlideshow, CustomerSignInFlow } from '../../misc/components/consumer';
 
 
 
-export default function OnboardingLayout() {
+export default function CustomerSignInFlowLayout() {
   return (
     <div className="w-screen flex flex-col-reverse lg:grid lg:max-xl:grid-cols-[0.9fr,1fr] xl:grid-cols-2 h-screen justify-between overflow-auto bg-[#042100]  md:pb-0">
       <CustomerSlideshow />
@@ -18,7 +17,7 @@ export default function OnboardingLayout() {
 
         <div className="absolute inset-y-0 left-[-10%] right-0 lg:fixed lg:left-auto lg:max-xl:w-[51.75vw] lg:w-[50vw]" aria-hidden>
           <Image
-            alt="Job seekers in a queue"
+            alt="Job queue"
             blurDataURL="eDI4z}~TIW_49a]yyD=_Ip%N00nh%MogxtI[^iS$of9ajDxaNexCoz"
             className="w-full object-cover object-bottom"
             placeholder="blur"

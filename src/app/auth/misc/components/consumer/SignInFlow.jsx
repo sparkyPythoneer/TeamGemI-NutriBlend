@@ -1,7 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { useCustomerLoginDetails, useCustomerRegisterDetails, } from '../../store';
-import CustomerSignupForm from './SignupStep1PersonalDetails';
+import { useCustomerLoginDetails } from '../../store';
 import CustomerEmailVerification from './SignupStep2EmailVerification';
 import UserDetailsForm from './SignupStep3OnboardingDetails';
 import CustomerSigninForm from './SignInStep0';
