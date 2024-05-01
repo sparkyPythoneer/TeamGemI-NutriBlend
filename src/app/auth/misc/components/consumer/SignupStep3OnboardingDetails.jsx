@@ -83,7 +83,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
-    //////////                          FORM                    //////////
+    //////////                       FORM                       //////////
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
@@ -97,6 +97,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
         },
         resolver: zodResolver(onboardForm)
     });
+
 
     //////////////////////////////////////////////////////////////////////
     ///////               SAVE INPUTS TO STORE                     ///////
@@ -306,22 +307,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
 
 
 
-            <SelectComboSingle
-                name='state'
-                label="Allergies"
-                placeholder="Select state"
-                value={watch("allergies") || ""}
-                valueKey='value'
-                onChange={(val) =>
-                    setValue("allergies", val)
-                }
-                containerClass='!my-2 transparent'
-                itemClass='text-xs'
-                options={allergies}
-                triggerColor='white'
-                transparent
-            />
-
+         
 
 
 

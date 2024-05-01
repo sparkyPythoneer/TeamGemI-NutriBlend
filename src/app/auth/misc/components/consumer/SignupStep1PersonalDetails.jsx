@@ -28,6 +28,7 @@ const registerForm = z.object({
   first_name: z.string({ required_error: 'Enter first name.' }).min(1, { message: 'First name is required' }),
   last_name: z.string({ required_error: 'Enter last name.' }).min(1, { message: 'Last name is required' }),
   email: z.string({ required_error: 'Enter email.' }).email({ message: 'Enter valid email' }),
+  phone_number: z.number({ required_error: 'Enter phone  number.' }).min(11, {messsage: "Phone number must be at least 11 digits"}),
   password: z.string({ required_error: 'Enter password.' }).min(8, "Password must be at least 8 characters").regex(/(?=.*\d)/, "Password must contain a number").regex(/(?=.*[A-Z])/, "Password must contain an uppercase letter")
     .regex(/(?=.*[a-z])/, "Password must contain a lowercase letter").regex(/(?=.*[@#$%^&+=])/, "Password must contain a special character (@#$%^&+=)"),
   confirm_password: z.string({ required_error: 'Confirm your password.' }).min(8, "Password must be at least 8 characters"),
@@ -94,6 +95,7 @@ const CustomerSignupForm = ({ onNext }) => {
         email: data.email,
         user_type: "NB_USER",
         password: data.password,
+        confirm_password: data.confirm_password
       };
 
       signUp(dataToSubmit, {

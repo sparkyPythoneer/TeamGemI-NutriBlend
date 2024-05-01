@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { cn } from '@/utils/classname';
 
-import { SmallSpinner, Select as Selection, SelectTrigger, SelectContent, SelectItem, SelectValue } from '../ui';
-
+import { Select as Selection, SelectTrigger, SelectContent, SelectItem, SelectValue } from '../ui';
+import { SmallSpinner } from '.';
 
 
 
