@@ -16,7 +16,7 @@ export default function Home() {
           className="flex items-center gap-2 text-lg font-bold "
         >
           <span className="text-white animate-pulse">NutriBlend</span>
-          <FontAwesomeIcon icon={faAppleAlt} className="text-primary animate-slideInRight" width={20} height={20} />
+          <FontAwesomeIcon icon={faAppleAlt} className="text-primary" width={20} height={20} />
         </Link>
 
         <nav className="">
@@ -59,7 +59,7 @@ export default function Home() {
           <Image src="/assets/soup-landing-page.png" alt="health" className="w-full" width={500} height={500} />
     
           <article className="absolute text-center top-[70%] left-0 right-0 bg-red/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">
-            <h2 className="text-3xl font-bold text-[#22c55e]" style={{ fontFamily: "'Nothing You Could Do', cursive" }}>Soup</h2>
+            <h2 className="text-3xl font-bold text-[#22c55e]" >Soup</h2>
 
             <div className="text-xl text-foreground">
               <p className="font-semibold text-base text-emerald-300">Nutrition </p>
@@ -80,7 +80,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-opacity-10 z-10" style={{backgroundImage: "url('/assets/AdobeStock_248929619_Preview.jpeg')", filter: "blur(5px)"}}></div>
             <div className="relative z-20 flex p-10 items-center">
                 <div>
-                    <h3 className="relative text-[100px] animate-bounce duration-6000 repeat-infinite  leading-none my-20 mx-20 font-bold text-center text-[#22c55e] " style={{ fontFamily: "'Nothing You Could Do', cursive" }}>
+                    <h3 className="relative text-[100px] animate-bounce duration-6000 repeat-infinite  leading-none my-20 mx-20 font-bold text-center text-[#22c55e] " >
                     About us
                     </h3>
                 </div>
@@ -100,7 +100,7 @@ export default function Home() {
           <Image src="/assets/salad.png" alt="health" className="w-[400px] h-[340px] " width={500} height={500} />
 
             <article className="absolute text-center top-[70%] left-0 right-0 bg-red/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">
-              <h2 className="text-3xl font-extrabold text-[#22c55e]" style={{ fontFamily: "'Nothing You Could Do', cursive" }}>Salad</h2>
+              <h2 className="text-3xl font-extrabold text-[#22c55e]" >Salad</h2>
 
               <div className="text-sm text-foreground">
                 <p className="font-semibold text-base text-emerald-300">Nutrition </p>
@@ -115,7 +115,7 @@ export default function Home() {
           <article className="relative max-w-xs">
           <Image src="/assets/rice.png" alt="health" className="w-full" width={500} height={500} />
             <article className="absolute text-center top-[70%] left-0 right-0 bg-blue/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">
-              <h2 className="text-3xl font-extrabold text-[#22c55e]" style={{ fontFamily: "'Nothing You Could Do', cursive" }}>Jollof Rice</h2>
+              <h2 className="text-3xl font-extrabold text-[#22c55e]" >Jollof Rice</h2>
 
               <div className="text-sm text-foreground">
                 <p className="font-semibold text-base text-emerald-300" >Nutrition </p>
@@ -130,7 +130,7 @@ export default function Home() {
           <article className="relative max-w-xs">
           <Image src="/assets/chicken.png" alt="health" className="w-[360px] h-[340px]" width={500} height={300} />
           <article className="absolute text-center top-[70%] left-0 right-0 bg-black/10 backdrop-blur-lg px-4 py-8 rounded-lg transform transition-all duration-500 hover:scale-110 hover:-translate-y-16 hover:text-xl">
-                <h2 className=" text-3xl font-extrabold text-[#22c55e]" style={{ fontFamily: "'Nothing You Could Do', cursive" }}>Chicken Sauce</h2>
+                <h2 className=" text-3xl font-extrabold text-[#22c55e]" >Chicken Sauce</h2>
 
                 <div className="text-sm text-foreground">
                     <p className="font-semibold text-base text-emerald-300">Nutrition </p>

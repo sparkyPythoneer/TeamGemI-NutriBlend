@@ -424,9 +424,9 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
                     }
                 </div>
                 <div className='relative w-full'>
-                    <input type="text" placeholder="Add a health preference" value={prefInput} onChange={(e) => setPrefInput(e.target.value)} className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("healthPreferences")) ? "text-white" : "text-white/60")} {...register('healthPreferences')} id="healthPreferences" onKeyDown={handleHealthPreferenceKeyDown} />
+                    <input type="text" placeholder="Add a health preference" value={prefInput} onChange={(e) => setPrefInput(e.target.value)} className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("healthPreferences")) ? "text-white" : "text-white/60")}  id="healthPreferences" onKeyDown={handleHealthPreferenceKeyDown} />
 
-                    <button className="absolute right-[1%] top-[5%] bg-primary rounded-full p-1 text-white text-sm" onClick={() => handleSelectHealthPreference(prefInput)}>
+                    <button className="absolute right-[1%] top-[15%] bg-primary rounded-full p-1 text-white text-sm" onClick={() => handleSelectHealthPreference(prefInput)}>
                         <Plus />
                     </button>
                 </div>
