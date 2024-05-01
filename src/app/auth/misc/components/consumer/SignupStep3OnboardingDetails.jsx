@@ -7,20 +7,21 @@ import { Country, State, City, ICountry, IState } from 'country-state-city';
 import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 
-import { ErrorModal, Select, SelectComboSingle, SmallSpinner } from '@/components/shared';
+import { ErrorModal, LoadingOverLay, Select, SelectComboSingle, SmallSpinner } from '@/components/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignIn, useOnboardNB } from '../../api';
 import { useErrorModalState } from '@/hooks';
 import { useCustomerRegisterDetails } from '../../store';
 import { cn } from '@/utils/classname';
 import { setAccessToken } from '@/utils/tokens';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Plus, X } from 'lucide-react';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { allergies, diet_choices } from '@/constants';
 import ComboBox from '@/components/shared/selectComboSingle';
 import { displayFont } from '@/app/layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'sonner';
 
 
 
@@ -29,6 +30,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 const onboardForm = z.object({
     username: z.string({ required_error: 'Enter username.' }).min(1, { message: 'username is required' }),
     allergies: z.array(z.string()),
+    health_preference: z.array(z.string()),
     country: z.string({ required_error: 'Please select country.' }),
     state: z.string({ required_error: 'Please select state.' }),
     dietary_preference: z.string({ required_error: 'Select dietary preference.' }),
@@ -54,7 +56,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
 
 
     const signIn = useSignIn();
-    const { mutateAsync: onBoardTalent, isLoading: isOnboardingTalent } = useOnboardNB();
+    const { mutateAsync: onBoardUser, isLoading: isOnboardingUser } = useOnboardNB();
     const [slide, setslide] = useState("stagnant")
 
     useEffect(() => {
@@ -93,7 +95,9 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
             dietary_preference: userData.dietary_preference,
             country: userData.country,
             state: userData.state,
-            allergies: userData.allergies,
+            allergies: userData.allergies || [],
+            health_preference: userData.health_preference || [],
+
         },
         resolver: zodResolver(onboardForm)
     });
@@ -141,20 +145,18 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
     //////////////////////////////////////////////////////////////////////
     const onSubmit = async (data) => {
         try {
-
             const userData = {
                 username: data.username,
-                desired_role: data.desired_role,
-                years_of_experience: data.years_of_experience,
-                stack: data.stack.split(','),
-                job_type: data.job_type,
-                currently_employed: data.currently_employed,
-                willing_to_relocate: data.willing_to_relocate,
+                country: data.country,
+                state: data.state,
+                allergies: data.allergies,
+                health_preference: data.health_preference,
             };
 
-            onBoardTalent(userData, {
+            onBoardUser(userData, {
                 onSuccess: (response) => {
                     window.postMessage('userTypeChange', window.location.href);
+                    Router.push("/user/chat")
                     clearStorage()
                     onDetailsSubmit(data);
                 }
@@ -163,6 +165,59 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
             console.error('An error occurred:', error?.response);
         }
     };
+
+
+
+    const [selectedAllergies, setSelectedAllergies] = useState([]);
+
+    const handleAllergySelection = (allergyValue) => {
+        if (selectedAllergies.includes(allergyValue)) {
+            setSelectedAllergies(selectedAllergies.filter((value) => value !== allergyValue));
+        } else {
+            setSelectedAllergies([...selectedAllergies, allergyValue]);
+        }
+    };
+
+    useEffect(() => {
+        setValue("allergies", selectedAllergies)
+    }, [selectedAllergies, setValue])
+
+    const [selectedHealthPreferences, setSelectedHealthPreferences] = useState([]);
+    const [prefInput, setPrefInput] = useState("");
+
+    const handleSelectHealthPreference = (preference) => {
+        if (!preference) return;
+        if (preference.trim().length < 3) { toast.error("Enter at least 3 characaters"); return }
+        if (selectedHealthPreferences.includes(preference)) {
+            // If the preference is already selected, remove it from the array
+            const updatedPreferences = selectedHealthPreferences.filter(
+                (item) => item !== preference
+            );
+            setSelectedHealthPreferences(updatedPreferences);
+            setPrefInput("")
+        } else {
+            // If the preference is not selected, add it to the array
+            const updatedPreferences = [...selectedHealthPreferences, preference];
+            setSelectedHealthPreferences(updatedPreferences);
+            setPrefInput("")
+        }
+    };
+
+    const handleHealthPreferenceKeyDown = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const preference = event.target.value.trim();
+            if (preference) {
+                handleSelectHealthPreference(preference);
+                event.target.value = "";
+            }
+        }
+    };
+
+    useEffect(() => {
+        setValue("health_preference", selectedHealthPreferences)
+    }, [selectedHealthPreferences, setValue])
+
 
 
 
@@ -267,7 +322,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
 
 
             <div className='flex flex-col trasparent my-2'>
-            <label className='text-white text-sm'>Dietary Preference</label>
+                <label className='text-white text-sm'>Dietary Preference</label>
 
                 <Popover>
                     <PopoverTrigger>
@@ -305,16 +360,85 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
                 </Popover>
             </div>
 
+            <div className='flex flex-col my-2 w-full'>
+                <label className='text-white text-sm'>Allergies</label>
+                <div className={cn('flex items-center flex-wrap  gap-2.5 mt-3 mb-2', selectedAllergies.length < 1 && "hidden")}>
+                    {
+                        selectedAllergies.length > 0 && selectedAllergies.map((allergy, i) => (
+                            <article className='flex items-center bg-white/30 text-xs px-3 py-1 rounded-full' key={i}>
+                                <span>{allergy}</span>
+                                <X className='text-primary ml-6 cursor-pointer' width={20} onClick={() => handleAllergySelection(allergy)} />
+                            </article>
+                        ))
+                    }
+                </div>
+                <div className='w-full'>
+                    <Popover>
+                        <PopoverTrigger className='w-full'>
+                            <button className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("dietary_preference")) ? "text-white" : "text-white/60")} type="button"   >
+                                {
+                                    watch("allergies")?.length > 0 ? `${watch("allergies").length} selected` :
+                                        "Select allergies"
+                                }
+                            </button>
+                        </PopoverTrigger>
+
+                        <PopoverContent>
+
+                            <div className='flex flex-col max-h-96 overflow-y-scroll'>
+                                {
+                                    allergies && allergies.map((allergy) => (
+                                        <button
+                                            key={allergy.value}
+                                            onClick={() => handleAllergySelection(allergy.value)}
+
+                                            className='flex items-center justify-between w-full py-2 px-3 hover:bg- hover:text-primary rounded-lg text-primary text-center transition-colors'
+                                        >
+                                            <span className='text-left'>{allergy.name}</span>
+                                            <span className={cn('', selectedAllergies.includes(allergy.value) ? 'opacity-100' : 'opacity-0')}>
+                                                <Check className='text-primary' />
+                                            </span>
+                                        </button>
+                                    ))
+                                }
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+
+                </div>
+            </div>
 
 
-         
+
+            <div>
+                <label className='text-white text-sm'>Health Preferences</label>
+
+                <div className={cn('flex items-center flex-wrap gap-2.5 mt-3 mb-2', selectedHealthPreferences?.length < 1 && "hidden")}>
+                    {
+                        selectedHealthPreferences.length > 0 && selectedHealthPreferences.map((preference, i) => (
+                            <article className='flex items-center bg-white/30 text-xs px-3 py-1 rounded-full' key={i}>
+                                <span>{preference}</span>
+                                <X className='text-primary ml-6 cursor-pointer' width={20} onClick={() => handleSelectHealthPreference(preference)} />
+                            </article>
+                        ))
+                    }
+                </div>
+                <div className='relative w-full'>
+                    <input type="text" placeholder="Add a health preference" value={prefInput} onChange={(e) => setPrefInput(e.target.value)} className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("healthPreferences")) ? "text-white" : "text-white/60")} {...register('healthPreferences')} id="healthPreferences" onKeyDown={handleHealthPreferenceKeyDown} />
+
+                    <button className="absolute right-[1%] top-[5%] bg-primary rounded-full p-1 text-white text-sm" onClick={() => handleSelectHealthPreference(prefInput)}>
+                        <Plus />
+                    </button>
+                </div>
+            </div>
+
 
 
 
             <button className="bg-white flex items-center justify-center w-full disabled:bg-primary-light py-2 px-3 rounded-lg text-primary text-center disabled:cursor-not-allowed disabled:opacity-35 transition-colors " type="submit"
             >
 
-                <span className='flex items-center justify-center gap-4 text-[0.95rem] text-secondary-dark font-medium mx-auto flex-1'>Create Profile {isOnboardingTalent && <SmallSpinner className='text-primary' />}</span>
+                <span className='flex items-center justify-center gap-4 text-[0.95rem] text-secondary-dark font-medium mx-auto flex-1'>Create Profile {isOnboardingUser && <SmallSpinner className='text-primary' />}</span>
                 <span className='flex items-center justify-center ml-auto bg-primary rounded-full w-9 h-9'><ArrowRight className='text-white' /></span>
             </button>
 
@@ -340,7 +464,6 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
                 </div>
             </ErrorModal>
 
-            {/* <LoadingOverlay isOpen={isOnboardingTalent} /> */}
         </form>
     );
 };

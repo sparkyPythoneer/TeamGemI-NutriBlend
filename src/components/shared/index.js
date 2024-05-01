@@ -1,6 +1,7 @@
 export { default as NavTabs } from './tab'
 export { SmallSpinner } from './spinner'
 export { default as Spinner } from './spinner'
+export { default as LoadingOverLay } from './LoadingOverLay'
 export { default as ErrorModal } from './errorModal'
 export { default as SelectComboSingle } from './selectComboSingle'
 export { default as Select } from './select'
