@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 async function chatWithAI(userData) {
     try {
         const response = await Axios.post("/ai/chat/", userData);
-        console.log(response)
         return response.data;
     } catch (error) {
         throw error;

@@ -9,25 +9,30 @@ import useCustomerDetailsStore from '../../../context/userDetailsStore'
 import { useStartChat } from './misc/api'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { formatRecipe } from '@/utils/fns'
 
 const ChatDashboard = () => {
     const { setUserData, userData, UserId } = useCustomerDetailsStore();
     const { mutate: startAIChat } = useStartChat()
     const [message, setMessage] = useState('')
-    const [AIResponse, setAIResponse] = useState('')
+    const [AIResponse, setAIResponse] = useState({})
 
 
     const router = useRouter()
-    console.log(userData)
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!message || message.trim() == "") { toast.error('Please enter a valid message'); return }
         if (message.trim().length < 5) { toast.error('Please enter at least 5 characters in your message'); return }
         try {
-            const response = startAIChat({ user_message: message })
-            //router.push(response?.conversation)
-            console.log(response)
-            setAIResponse(response.data[1].ccontent)
+            startAIChat({ user_message: message },
+
+                {
+                    onSuccess: (response) => {
+                        console.log('response', response)
+                        console.log(formatRecipe(response[1].content))
+                        setAIResponse(formatRecipe(response[1].content) || response[1].content)
+                    }
+                })
         } catch (error) {
             console.log('error', error);
         }
@@ -45,13 +50,51 @@ const ChatDashboard = () => {
                             value={message} onChange={(e) => setMessage(e.target.value)}
                         />
                         <span className='absolute right-[1%] top-[15%] bg-primary p-2 rounded-full cursor-pointer'>
-                            <ArrowRight className=' text-background' />
+                            <ArrowRight className=' text-white' />
                         </span>
                     </div>
                 </form>
             </section>
 
-            <section dangerouslySetInnerHTML={{ __html: AIResponse }}>
+            <section className=' justify-center p-5' >
+                {
+                    typeof AIResponse === 'string' && <div className="max-w-3xl mx-auto !bg-white/20 backdrop-blur-lg rounded-lg shadow-md overflow-hidden">
+                        <h2 className="text-3xl font-semibold text-center text-white p-6">AI Response</h2>
+                        <div className="p-6">
+                            <p className="text-xl text-white">{AIResponse}</p>
+                        </div>
+                    </div>
+                }
+                <div className="max-w-3xl mx-auto bg-white/20 backdrop-blur-lg rounded-lg shadow-md overflow-hidden">
+                    <h2 className="text-3xl font-semibold text-center text-white p-6">{AIResponse?.title}</h2>
+                    <div className="p-6">
+                        <p className="text-xl text-white">Cuisine Type: {AIResponse?.cuisine_type}</p>
+                        <p className="text-xl text-white">Meal Category: {AIResponse?.meal_category}</p>
+                        <p className="text-xl text-white">Cooking Time: {AIResponse?.cooking_time}</p>
+                    </div>
+                    <div className="p-6">
+                        <h3 className="text-xl font-semibold text-white">Ingredients:</h3>
+                        <ul className="list-disc pl-6">
+                            {typeof AIResponse?.ingredients}
+                            {
+                                typeof AIResponse?.ingredients == 'object' && Object.entries(AIResponse?.ingredients)?.map((ingredient, index) => (
+                                    <li key={index}>{ingredient?.quantity} {ingredient?.name}</li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    <div className="p-6">
+                        <h3 className="text-xl font-semibold text-white">Steps:</h3>
+                        <ol className="list-decimal pl-6 text-xl">
+                            {AIResponse?.steps?.map((step, index) => (
+                                <li key={index} className='text-white font-normal'>{step}</li>
+                            ))}
+                        </ol>
+                    </div>
+                </div>
+
+
+
             </section>
         </div>
     )
