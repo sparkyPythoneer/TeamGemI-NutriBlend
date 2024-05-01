@@ -51,7 +51,6 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
         errorModalMessage,
     } = useErrorModalState();
 
-
     const router = useRouter()
 
 
@@ -233,9 +232,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
             <header className='flex flex-col self-start '>
                 <h1 className={cn(' text-3xl md:text-[2.35rem] text-white font-semibold', displayFont.className)}>
                     Let&apos;s help set up your <br className='max-xs:hidden lg:max-xl:hidden' /> profile
-                    <span className='inline-block items-center justify-center text-lg bg-white/20 px-4 py-0.5 rounded-lg ml-2.5 translate-y-[-1.5px]'>
-                        2/2
-                    </span>
+                   
                 </h1>
                 <p className="text-[#BCBCBC] text-sm md:font-base mt-1 mb-6">
                     Kindly complete your profile setup to help us fine tune your experience.
@@ -424,7 +421,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
                     }
                 </div>
                 <div className='relative w-full'>
-                    <input type="text" placeholder="Add a health preference" value={prefInput} onChange={(e) => setPrefInput(e.target.value)} className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("healthPreferences")) ? "text-white" : "text-white/60")}  id="healthPreferences" onKeyDown={handleHealthPreferenceKeyDown} />
+                    <input type="text" placeholder="Add a health preference" value={prefInput} onChange={(e) => setPrefInput(e.target.value)} className={cn("!min-w-full bg-white/20 backdrop-blur-lg rounded-lg transition-colors px-3.5 py-2 sm:px-4 sm:py-3 mb-2 text-sm text-left", (watch("healthPreferences")) ? "text-white" : "text-white/60")} id="healthPreferences" onKeyDown={handleHealthPreferenceKeyDown} />
 
                     <button className="absolute right-[1%] top-[15%] bg-primary rounded-full p-1 text-white text-sm" onClick={() => handleSelectHealthPreference(prefInput)}>
                         <Plus />
