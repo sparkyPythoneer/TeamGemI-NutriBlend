@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.http import Http404
 from ai.utils import suggest_substitute
 from .models import Recipes, UserProfile, ChefProfile
 
@@ -25,8 +25,7 @@ class UserProfileAPIView(APIView):
     def post(self, request):
         serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid():
-            user = request.user
-            profile = UserProfile.create_profile(user, **serializer.validated_data)
+            profile = UserProfile.create_profile(user=request.user, **serializer.validated_data)
             return Response(
                 UserProfileSerializer(profile).data, status=status.HTTP_201_CREATED
             )
@@ -41,10 +40,18 @@ class UserProfileAPIView(APIView):
         UserProfile.delete_profile(id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, id):
-        profile = UserProfile.get_profile(id)
+    def get_object(self, user_profile_id):
+        try:
+            return UserProfile.objects.select_related('user').get(user__id=user_profile_id)
+        except UserProfile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, user_profile_id):
+        profile = self.get_object(user_profile_id)
+        # print("profiel---------", profile)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
+
 
 
 class ChefProfileAPIView(APIView):
@@ -53,14 +60,26 @@ class ChefProfileAPIView(APIView):
     def post(self, request):
         serializer = ChefProfileSerializer(data=request.data)
         if serializer.is_valid():
-            user = request.user
             chef_profile = ChefProfile.create_chef_profile(
-                user, **serializer.validated_data
+                user=request.user, **serializer.validated_data
             )
             return Response(
                 ChefProfileSerializer(chef_profile).data, status=status.HTTP_201_CREATED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    def get_object(self, chef_profile_id):
+        try:
+            return ChefProfile.objects.select_related('user').get(user__id=chef_profile_id)
+        except ChefProfile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, chef_profile_id):
+        chef_profile = self.get_object(chef_profile_id)
+        # print("profiel---------", profile)
+        serializer = ChefProfileSerializer(chef_profile)
+        return Response(serializer.data)
 
 
 class UserRecipesListView(generics.ListAPIView):

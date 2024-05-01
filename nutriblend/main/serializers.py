@@ -2,13 +2,7 @@ from rest_framework import serializers
 from .models import User, UserProfile, ChefProfile
 from .models import Recipes, Ingredients, RecipeDetails
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'middle_name', 'last_name', 'user_type', 'email',]
-
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserDetailSerializer() 
     class Meta:
         model = UserProfile
         fields = '__all__'
@@ -16,7 +10,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class ChefProfileSerializer(serializers.ModelSerializer):
-    user = UserDetailSerializer()
 
     class Meta:
         model = ChefProfile
