@@ -6,12 +6,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
 from ai.utils import suggest_substitute
-from .models import Recipes, UserProfile, ChefProfile
+from .models import RecipeDetails, Recipes, UserProfile, ChefProfile, Ingredients
 
 
 from .serializers import (
     ChefProfileSerializer,
     IngredientsSerializer,
+    RecipeDetailsSerializer,
     RecipeSerializer,
     UserProfileSerializer,
 )
@@ -120,3 +121,33 @@ class RecipeDetailView(generics.RetrieveAPIView):
         }
         return Response(response_data)
 
+
+class AddIngredientsToRecipeDetails(APIView):
+    def post(self, request, recipe_id):
+        # Extract the ingredient IDs and quantities from the request
+        ingredient_data = request.data.get("ingredients", [])
+        recipe = Recipes.objects.get(id=recipe_id)
+
+        # Create or retrieve Ingredients instances and add them to the recipe detail
+        added_ingredients = []
+        for data in ingredient_data:
+            ingredient_id = data.get('id')
+            quantity = data.get('quantity')
+
+            try:
+                # Retrieve the ingredient details from the database
+                ingredient = Ingredients.objects.get(id=ingredient_id)
+            except Ingredients.DoesNotExist:
+                # Skip if ingredient with the given ID does not exist
+                continue
+
+            # Create RecipeDetails instance for each ingredient
+            recipe_detail = RecipeDetails.objects.create(
+                recipe=recipe,
+                ingredients=ingredient,
+                quantity=quantity
+            )
+            added_ingredients.append(recipe_detail)
+
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
