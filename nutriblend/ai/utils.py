@@ -189,13 +189,10 @@ def suggest_substitute(user_profile, recipe_detail, ingredient):
         return None
 
     ingredients = response_data.get('ingredients', [])
-    for ingredient in ingredients:
+    ingredient_objects = []
+    for ingredient_data in ingredients:
         # Assuming you have an Ingredients model with a name field
-        Ingredients.objects.get_or_create(name=ingredient.get('name'))
-        # RecipeDetails.objects.create(
-        #     recipe=recipe_detail.recipe,
-        #     ingredients=ingredient_obj,
-        #     quantity=ingredient.get('quantity'),
-        # )
+        ingredient_obj, _ = Ingredients.objects.get_or_create(name=ingredient_data.get('name'))
+        ingredient_objects.append(ingredient_obj)
 
-    return ingredients
+    return ingredient_objects
