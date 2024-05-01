@@ -6,6 +6,7 @@ from user_auth.models import User
 
 # Create your serializer(s) here.
 class UserSerializer(serializers.ModelSerializer):
+    user_type = serializers.CharField()
     password = serializers.CharField(
         style={"input_type": "password"},
         validators=[validate_password],
