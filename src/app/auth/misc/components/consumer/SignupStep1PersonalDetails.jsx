@@ -14,16 +14,11 @@ import { useSignUp } from '../../api';
 import { useCustomerRegisterDetails } from '../../store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare, faEnvelope, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
-import { EyeSlash, ViewIcon } from '../icons';
+import { EyeSlash, ViewIcon } from '../../../signin/icons';
 import { SmallSpinner } from '@/components/shared';
 import { ArrowRight } from 'lucide-react';
 import { displayFont } from '@/app/layout';
 
-
-const genders = [
-  { name: 'Male', value: 'M' },
-  { name: 'Female', value: 'F' },
-]
 
 
 

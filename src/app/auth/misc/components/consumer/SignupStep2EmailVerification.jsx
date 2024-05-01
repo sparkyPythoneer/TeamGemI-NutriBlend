@@ -3,14 +3,13 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 
-// import { useErrorModalState } from '@/hooks';
 import { formatAxiosErrorMessage } from '@/utils/errors';
-import { Button, ErrorModal, LoaderBtn } from '@/components/shared';
+import { Button } from '@/components/ui';
 
 // import { InfoStar, RightUpArrow } from '../../icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { useErrorModalState } from '@/app/hooks';
+import { useErrorModalState } from '@/hooks';
 
 
 
@@ -181,7 +180,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
 
 
         {/* <ErrorModal
-          isErrorModalOpen={isErrorModalOpen}
+          isErrorModalOpen={true}
           setErrorModalState={setErrorModalState}
           subheading={
             errorModalMessage || 'Something went wrong.'

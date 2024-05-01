@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 
-import { CustomerSlideshow, CustomerSignUpFlow } from '../../misc/components/consumer';
+import { CustomerSlideshow, CustomerSignInFlow } from '../../misc/components/consumer';
 
 
 
@@ -14,7 +14,7 @@ export default function OnboardingLayout() {
 
 
       <section className="grow flex items-center justify-center relative px-4 pb-0 lg:m-0 lg:py-0 lg:flex lg:basis-1/2 lg:flex-col lg:justify-center lg:overflow-y-auto  lg:[@media(min-height:520px)]:items-center max-lg:max-h-[78vh]">
-        <CustomerSignUpFlow />
+        <CustomerSignInFlow />
 
         <div className="absolute inset-y-0 left-[-10%] right-0 lg:fixed lg:left-auto lg:max-xl:w-[51.75vw] lg:w-[50vw]" aria-hidden>
           <Image
