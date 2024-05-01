@@ -74,8 +74,7 @@ const ChatDashboard = () => {
                     </div>
                     <div className="p-6">
                         <h3 className="text-xl font-semibold text-white">Ingredients:</h3>
-                        <ul className="list-disc pl-6">
-                            {typeof AIResponse?.ingredients}
+                        <ul className="list-disc pl-6 text-lg">
                             {
                                 typeof AIResponse?.ingredients == 'object' && Object.entries(AIResponse?.ingredients)?.map((ingredient, index) => {
                                     console.log(ingredient)
@@ -87,7 +86,7 @@ const ChatDashboard = () => {
                     </div>
                     <div className="p-6">
                         <h3 className="text-xl font-semibold text-white">Steps:</h3>
-                        <ol className="list-decimal pl-6 text-xl">
+                        <ol className="list-decimal pl-6 text-lg">
                             {AIResponse?.steps?.map((step, index) => (
                                 <li key={index} className='text-white font-normal'>{step}</li>
                             ))}
