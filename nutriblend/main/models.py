@@ -10,7 +10,7 @@ User = settings.AUTH_USER_MODEL
 
 class Ingredients(BaseModel):
     name = models.CharField(max_length=225, blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "INGREDIENT"

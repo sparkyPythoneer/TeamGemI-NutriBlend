@@ -149,3 +149,56 @@ def create_receipe(user_profile, ai_response):
         )
 
 #   return recipe
+
+
+def suggest_substitute(user_profile, recipe_detail, ingredient):
+    # Extract user preferences
+    preferences = {
+        "dietary_preferences": user_profile.diatary_prefrence,
+        "allergies": user_profile.allergies,
+        "health_condition": user_profile.health_condition,
+        "restrictions": [ingredient.name for ingredient in user_profile.ingredient_restrictions.all()]
+    }
+
+    # Construct the prompt with structured data
+    prompt = f"Generate a subsitute ingredients for {ingredient} in this recipe while putting the following user prefrence into considation:\n"
+    prompt += f"- Preferences: {json.dumps(preferences)}\n"
+    prompt += f"- Recipe Detail : {recipe_detail}\n"
+    prompt += "Your response must be only a valid JSON with this key only:'ingredients' (list of ingredients with quantities) using the following structure:\n"
+    prompt += '''{
+                    "ingredients": [
+                        {
+                        "quantity": "x",
+                        "name": "xx"
+                        "descr
+                        },
+                        {
+                        "quantity": "x",
+                        "name": "xx"
+                        }
+                    ]
+                }\n'''
+    prompt += "This field is required.\n"
+    print("---prompt--", prompt)
+
+    ai_response = generate_ai_response(prompt)
+    print("---ai_response----", ai_response)
+
+    try:
+        response_data = json.loads(ai_response)
+    except json.JSONDecodeError:
+        print("Error: Invalid JSON response from AI model.")
+        return None
+
+    ingredients = response_data.get('ingredients', [])
+    print("---ingredients---", ingredients)
+    for ingredient in ingredients:
+        # Assuming you have an Ingredients model with a name field
+        ingredient_obj, created = Ingredients.objects.get_or_create(name=ingredient.get('name'))
+        RecipeDetails.objects.create(
+            recipe=recipe_detail.recipe,
+            ingredients=ingredient_obj,
+            quantity=ingredient.get('quantity'),
+        )
+
+    return ingredients

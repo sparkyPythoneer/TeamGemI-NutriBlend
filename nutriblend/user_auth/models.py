@@ -32,7 +32,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         max_length=255, choices=TYPE_OF_USER, default="NB_USER"
     )
     email = models.EmailField(max_length=255, unique=True)
-    phone = models.CharField(max_length=25, unique=True, default="2340123456789")
+    phone = models.CharField(max_length=25, default="2340123456789")
     user_verified = models.BooleanField(default=False)
     password = models.CharField(
         max_length=255, validators=[validate_password], editable=False
