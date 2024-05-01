@@ -4,11 +4,14 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from ai.utils import suggest_substitute
 from .models import Recipes, UserProfile, ChefProfile
 
 
 from .serializers import (
     ChefProfileSerializer,
+    IngredientsSerializer,
     RecipeSerializer,
     UserProfileSerializer,
 )
@@ -68,6 +71,7 @@ class UserRecipesListView(generics.ListAPIView):
         user = self.request.user
         return Recipes.objects.filter(user=user)
 
+
 class RecipeDetailView(generics.RetrieveAPIView):
     queryset = Recipes.objects.all()
     serializer_class = RecipeSerializer
@@ -76,7 +80,9 @@ class RecipeDetailView(generics.RetrieveAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
-        ingredient_id = request.data.get('ingredient_id') 
+        ingredient_id = request.data.get('ingredient_id')
+        should_sub = self.request.query_params.get('should_sub', False) == 'true'
+        print("---should_sub---", should_sub)
         
         # Retrieve the ingredient from the recipe details
         recipe_detail = instance.recipedetails_set.filter(ingredients=ingredient_id).first()
@@ -84,15 +90,25 @@ class RecipeDetailView(generics.RetrieveAPIView):
             return Response({"error": "Ingredient not found in recipe"}, status=status.HTTP_404_NOT_FOUND)
         
         ingredient = recipe_detail.ingredients
-        print("----ingredient---", ingredient)
         
         # Add the ingredient to the user's ingredient_restrictions field
         user_profile = UserProfile.objects.get(user=request.user)
         user_profile.ingredient_restrictions.add(ingredient)
 
+        if should_sub:
+            print("Trueeeee-----")
+            suggested_ingredients = suggest_substitute(user_profile, recipe_detail, ingredient)
+            ("---suggested_ingredients----", suggested_ingredients)
+            
         # Delete the ingredient from the recipe
         recipe_detail.delete()
         
         # Serialize the updated recipe and return it
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        suggested_ingredients = IngredientsSerializer(suggested_ingredients, many=True)
+        response_data = {
+            "recipe": serializer.data,
+            "suggested_ingredients": suggested_ingredients.data
+        }
+        return Response(response_data)
+
