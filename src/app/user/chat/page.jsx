@@ -26,7 +26,8 @@ const ChatDashboard = () => {
         try {
             const response = startAIChat({ user_message: message })
             //router.push(response?.conversation)
-
+            console.log(response)
+            setAIResponse(response.data[1].ccontent)
         } catch (error) {
             console.log('error', error);
         }

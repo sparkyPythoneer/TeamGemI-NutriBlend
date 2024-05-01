@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import toast from 'sonner';
+import {toast} from 'sonner';
 import { getAccessToken } from '@/utils/tokens';
 
 export const Axios = axios.create({
