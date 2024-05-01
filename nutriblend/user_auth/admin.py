@@ -11,56 +11,24 @@ class UserResource(resources.ModelResource):
         model = User
 
 
-
-
-# class OtpResource(resources.ModelResource):
-#     class Meta:
-#         model = Otp
-
-
-
 class UserResourceAdmin(ImportExportModelAdmin):
     resource_class = UserResource
-
     search_fields = [
         "first_name",
+        "middle_name",
         "last_name",
         "email",
+        "phone",
     ]
-
-    date_hierarchy = "created_at"
     list_filter = [
-        "created_at",
-        "is_staff",
-        "email_verified",
-    
+        "user_verified",
     ]
+    date_hierarchy = "created_at"
 
     def get_list_display(self, request):
         item = [field.name for field in self.model._meta.concrete_fields]
-
         item.remove("password")
-
         return item
-    
-
-
-# class OtpResourceAdmin(ImportExportModelAdmin):
-#     resource_class = OtpResource
-
-#     search_fields = (
-#         "user__email",
-#         "user__first_name",
-#         "user__last_name",
-#     )
-#     ordering = ("-created_at", "user", "otp", "is_verified", "otp_type")
-
-#     def get_list_display(self, request):
-#         return [field.name for field in self.model._meta.concrete_fields]
-
-
 
 
 admin.site.register(User, UserResourceAdmin)
-
-# admin.site.register(Otp, OtpResourceAdmin)

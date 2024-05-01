@@ -1,16 +1,20 @@
 from rest_framework import serializers
 
-from helpers.reusable import validate_password
+from helpers.reusable import add_prefix_to_phone, validate_password
+from user_auth.models import User
 
-from .models import User
 
-
+# Create your serializer(s) here.
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
-        required=True,
         style={"input_type": "password"},
         validators=[validate_password],
-        write_only=True
+        write_only=True,
+    )
+    confirm_password = serializers.CharField(
+        style={"input_type": "password"},
+        validators=[validate_password],
+        write_only=True,
     )
 
     class Meta:
@@ -20,131 +24,100 @@ class UserSerializer(serializers.ModelSerializer):
             "middle_name",
             "last_name",
             "email",
+            "phone",
+            "password",
+            "confirm_password",
             "user_type",
-            "password"
+            "user_verified",
+        ]
+        read_only_fields = [
+            "user_type",
+            "user_verified",
         ]
 
-class UserVerificationSerializer(serializers.Serializer):
-    recipient = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)
+    def validate(self, attrs):
+        if attrs.get("password") != attrs.get("confirm_password"):
+            raise serializers.ValidationError({"errors": "password(s) do not match."})
+        else:
+            attrs.pop("confirm_password")
+        attrs["phone"] = add_prefix_to_phone(attrs.get("phone"))
+        return attrs
 
 
 class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField()
     password = serializers.CharField(
-        required=True,
-        style={"input_type": "password"},
-        write_only=True
+        style={"input_type": "password"}, validators=[validate_password]
     )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(
-        required=True,
-        style={"input_type": "password"},
-        write_only=True
+        style={"input_type": "password"}, validators=[validate_password]
     )
     new_password = serializers.CharField(
-        required=True,
-        style={"input_type": "password"},
-        validators=[validate_password],
-        write_only=True
-    )
-
-
-class ForgotPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-
-    def validate(self, attrs):
-        if not User.objects.filter(email=attrs.get("email")).exists():
-            raise serializers.ValidationError(
-                {"email": "User with this email does not exist."}
-            )
-        return attrs
-
-
-class UserVerificationSerializer(serializers.Serializer):
-    recipient = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "first_name",
-            "middle_name",
-            "last_name",
-        ]
-
-
-# class UserPasswordResetSerializer(serializers.Serializer):
-#     otp = serializers.CharField(max_length=6)
-#     new_password = serializers.CharField(
-#         required=True,
-#         style={"input_type": "password"},
-#         validators=[validate_password],
-#         write_only=True
-#     )
-
-#     def validate(self, attrs):
-#         if attrs.get("new_password") != attrs.get("confirm_password"):
-#             raise serializers.ValidationError(
-#                 {"detail": "new password(s) do not match."}
-#             )
-#         attrs.pop("confirm_password")
-#         return attrs
-        
-
-class UserPasswordResetSerializer(serializers.Serializer):
-    otp = serializers.CharField(max_length=6, required=True)
-    new_password = serializers.CharField(
-        required=True,
-        style={"input_type": "password"},
-        validators=[validate_password],
-        write_only=True
+        style={"input_type": "password"}, validators=[validate_password]
     )
     confirm_password = serializers.CharField(
-        required=True,
-        style={"input_type": "password"},
-        write_only=True
+        style={"input_type": "password"}, validators=[validate_password]
     )
 
     def validate(self, attrs):
         if attrs.get("new_password") != attrs.get("confirm_password"):
             raise serializers.ValidationError(
-                {"detail": "new password(s) do not match."}
+                {"errors": "new password(s) do not match."}
             )
+        else:
+            attrs.pop("confirm_password")
         return attrs
 
-    def create(self, validated_data):
-        validated_data.pop('confirm_password')
-        return validated_data
-    
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = '__all__'
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    phone_number = serializers.CharField()
+
+    def validate(self, attrs):
+        attrs["phone"] = add_prefix_to_phone(attrs.get("phone"))
+        return attrs
 
 
+class UserVerificationSerializer(serializers.Serializer):
+    recipient = serializers.CharField()
+    otp = serializers.CharField(max_length=8)
+
+    def validate(self, attrs):
+        attrs["recipient"] = add_prefix_to_phone(attrs.get("recipient"))
+        return attrs
 
 
-# class Registererializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'password', 'last_name', 'user_type', 'email',]
+class UserUpdateSerializer(serializers.Serializer):
+    first_name = serializers.CharField(required=False)
+    middle_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+
+    def validate(self, attrs):
+        if len(attrs) == 0:
+            raise serializers.ValidationError(
+                {{"errors": "no field(s) was passed to be updated."}}
+            )
+        return super().validate(attrs)
 
 
+class UserPasswordResetSerializer(serializers.Serializer):
+    otp = serializers.CharField(max_length=8)
+    phone = serializers.CharField()
+    new_password = serializers.CharField(
+        style={"input_type": "password"}, validators=[validate_password]
+    )
+    confirm_password = serializers.CharField(
+        style={"input_type": "password"}, validators=[validate_password]
+    )
 
-
-
-
-
-# class UserProfileSerializer(serializers.Serializer):
-#     username = serializers.CharField()
-#     country = serializers.CharField()
-#     diatary_prefrence = serializers.CharField()
-#     allergies = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
-#     health_preference = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
-#     ingredient_restrictions = serializers.CharField(required=False, allow_blank=True)
-
+    def validate(self, attrs):
+        if attrs.get("new_password") != attrs.get("confirm_password"):
+            raise serializers.ValidationError(
+                {"errors": "new password(s) do not match."}
+            )
+        else:
+            attrs.pop("confirm_password")
+        attrs["phone"] = add_prefix_to_phone(attrs.get("phone"))
+        return attrs
