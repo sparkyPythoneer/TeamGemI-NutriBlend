@@ -49,7 +49,7 @@ Frontend Tech Stack
 --------------
 
 - Language: Javascript
-- Framework: Next js
+- Framework: Next js, React js
 
 Authentication
 --------------
