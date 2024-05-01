@@ -28,7 +28,7 @@ const registerForm = z.object({
   first_name: z.string({ required_error: 'Enter first name.' }).min(1, { message: 'First name is required' }),
   last_name: z.string({ required_error: 'Enter last name.' }).min(1, { message: 'Last name is required' }),
   email: z.string({ required_error: 'Enter email.' }).email({ message: 'Enter valid email' }),
-  phone_number: z.string({ required_error: 'Enter phone  number.' }).min(11, {messsage: "Phone number must be at least 11 digits"}),
+  phone: z.string({ required_error: 'Enter phone  number.' }).min(11, {messsage: "Phone number must be at least 11 digits"}),
   password: z.string({ required_error: 'Enter password.' }).min(8, "Password must be at least 8 characters").regex(/(?=.*\d)/, "Password must contain a number").regex(/(?=.*[A-Z])/, "Password must contain an uppercase letter")
     .regex(/(?=.*[a-z])/, "Password must contain a lowercase letter").regex(/(?=.*[@#$%^&+=])/, "Password must contain a special character (@#$%^&+=)"),
   confirm_password: z.string({ required_error: 'Confirm your password.' }).min(8, "Password must be at least 8 characters"),
@@ -49,7 +49,7 @@ const CustomerSignupForm = ({ onNext }) => {
       last_name: userData.last_name,
       email: userData.email,
       country_code: userData.country_code,
-      phone_number: userData.phone_number,
+      phone: userData.phone,
       password: userData.password,
       confirm_password: userData.confirm_password
     },
@@ -93,7 +93,7 @@ const CustomerSignupForm = ({ onNext }) => {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        phone_number: data.phone_number,
+        phone: data.phone,
         user_type: "NB_USER",
         password: data.password,
         confirm_password: data.confirm_password
@@ -121,7 +121,7 @@ const CustomerSignupForm = ({ onNext }) => {
                 message: "An account with this email already exists.",
               });
             } else if (error.response?.data?.data.message === "User already exists.") {
-              setError("phone_number", {
+              setError("phone", {
                 type: "manual",
                 message: "An account with this phone number already exists.",
               });
@@ -194,10 +194,10 @@ const CustomerSignupForm = ({ onNext }) => {
         <div className='inputdiv transparent  my-2 withicon'>
           <label className='!text-white' htmlFor="email">Phone number</label>
           <div className='relative'>
-            <input type="string" placeholder="Phone number" className={cn(errors.phone_number && "error", "!bg-white/20 text-white placeholder:text-white/60")} {...register('phone_number')} id="phone_number" />
+            <input type="string" placeholder="Phone number" className={cn(errors.phone && "error", "!bg-white/20 text-white placeholder:text-white/60")} {...register('phone')} id="phone" />
             <span className='absolute left-[3%] top-[25%] md:left-[4%]'><FontAwesomeIcon icon={faEnvelope} /></span>
           </div>
-          {errors.phone_number && <p className='formerror'>{errors.phone_number.message}</p>}
+          {errors.phone && <p className='formerror'>{errors.phone.message}</p>}
         </div>
 
 

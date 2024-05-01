@@ -8,19 +8,24 @@ import { getAccessToken } from '@/utils/tokens'
 import useCustomerDetailsStore from '../../../context/userDetailsStore'
 import { useStartChat } from './misc/api'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const ChatDashboard = () => {
     const { setUserData, userData, UserId } = useCustomerDetailsStore();
     const { mutate: startAIChat } = useStartChat()
     const [message, setMessage] = useState('')
+    const [AIResponse, setAIResponse] = useState('')
 
+
+    const router = useRouter()
     console.log(userData)
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!message || message.trim() == "" )  {toast.error('Please enter a valid message'); return}
-        if( message.trim().length < 5 ) {toast.error('Please enter at least 5 characters in your message'); return}
+        if (!message || message.trim() == "") { toast.error('Please enter a valid message'); return }
+        if (message.trim().length < 5) { toast.error('Please enter at least 5 characters in your message'); return }
         try {
-            startAIChat({ user_message: message })
+            const response = startAIChat({ user_message: message })
+            //router.push(response?.conversation)
 
         } catch (error) {
             console.log('error', error);
@@ -45,8 +50,7 @@ const ChatDashboard = () => {
                 </form>
             </section>
 
-            <section>
-
+            <section dangerouslySetInnerHTML={{ __html: AIResponse }}>
             </section>
         </div>
     )

@@ -26,8 +26,8 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
     errorModalMessage,
   } = useErrorModalState();
   const [tokenError, setTokenError] = useState(false)
-  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
-  const inputRefs = Array(6).fill(0).map(() => React.createRef());
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '', '', '']);
+  const inputRefs = Array(8).fill(0).map(() => React.createRef());
   const [slide, setslide] = useState("stagnant")
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
         newVerificationCode[index] = newValue;
         setVerificationCode(newVerificationCode);
 
-        if (newValue && index < 5) {
+        if (newValue && index < 7) {
           inputRefs[index + 1].current?.focus();
         }
       } else if (newValue.length > 1) {
@@ -62,7 +62,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
 
         setVerificationCode(newVerificationCode);
 
-        if (index + newValuesArrays.length < 5) {
+        if (index + newValuesArrays.length < 7) {
           inputRefs[index + newValuesArrays.length].current?.focus();
         }
         else {
@@ -89,14 +89,14 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
     }
 
     const code = verificationCode.join('');
-    if (code.length < 6) {
+    if (code.length < 8) {
       setTokenError(true)
       return
     }
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/auth/verify/`,
-        { otp: code, recipient: user.email });
+        { otp: code, recipient: user.phone });
 
       if (response.status === 200) {
         setslide("out")
@@ -117,7 +117,7 @@ const CustomerEmailVerification = ({ user, onVerified }) => {
     }
   };
   useEffect(() => {
-    if (verificationCode.join("").length == 6) {
+    if (verificationCode.join("").length == 8) {
       handleFormSubmit()
     }
   }, [verificationCode])

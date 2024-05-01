@@ -1,9 +1,10 @@
+import { Axios } from "@/lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 async function onboardUser(userData) {
     try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/main/user-profiles/`, userData);
+        const response = await Axios.post(`/main/user-profiles/`, userData);
         return response.data;
     } catch (error) {
         throw error;

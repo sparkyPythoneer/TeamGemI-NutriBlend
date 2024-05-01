@@ -52,7 +52,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
     } = useErrorModalState();
 
 
-
+    const router = useRouter()
 
 
     const signIn = useSignIn();
@@ -156,7 +156,7 @@ const UserDetailsForm = ({ user, onDetailsSubmit }) => {
             onBoardUser(userData, {
                 onSuccess: (response) => {
                     window.postMessage('userTypeChange', window.location.href);
-                    Router.push("/user/chat")
+                    router.push("/user/chat")
                     clearStorage()
                     onDetailsSubmit(data);
                 }
